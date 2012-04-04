@@ -1,0 +1,40 @@
+* { margin: 0; padding: 0; }
+
+body {
+    padding: 1em;
+    font-size: 1em;
+    font-family: sans-serif;
+    line-height: 1.5em;
+    text-align: center;
+}
+
+h1 {
+    font-size: 2em;
+    line-height: 1.5em;
+}
+
+button {
+    padding: 0.5em;
+    margin: 1.5em 0;
+    margin-right: 0.5em;
+    width: 8em;
+}
+
+table {
+    margin: auto;
+    border-collapse: collapse;
+    font-size: 2em;
+    font-family: monospace;
+    line-height: 0;
+    text-align: center;
+    cursor: default;
+}
+td {
+    border: 1px solid #AAA;
+    padding: 0.125em;
+    width: 1em;
+    height: 1em;
+}
+td:hover {
+    background-color: #EEE;
+}
