@@ -72,21 +72,22 @@ Game.prototype.toggleFlag = function (idx) {
 }
 
 Game.prototype.neighbors = function (idx) {
-    var r, c, nr, nc, neighbors, offsets;
+    var r, c, newR, newC, neighbors, offsets;
     r = Math.floor(idx / this.width);
     c = idx % this.width;
-    offsets = [ [-1,-1], [ 0,-1], [ 1,-1]
-              , [-1, 0],          [ 1, 0]
-              , [-1, 1], [ 0, 1], [ 1, 1]
-              ];
+
     neighbors = [];
-    for (var i=0; i<offsets.length; i++) {
-        nr = r + offsets[i][0];
-        nc = c + offsets[i][1];
-        if ((0 <= nc && nc < this.width) && (0 <= nr && nr < this.height)) {
-            neighbors.push(nr * this.width + nc);
+    for (var rDelta = -1; rDelta <= 1; rDelta++) {
+        for (var cDelta = -1; cDelta <= 1; cDelta++) {
+            console.log(rDelta, cDelta);
+            newR = r + rDelta;
+            newC = c + cDelta;
+            if ((0 <= newC && newC < this.width) && (0 <= newR && newR < this.height)) {
+                neighbors.push(newR * this.width + newC);
+            }
         }
     }
+
     return neighbors;
 }
 
