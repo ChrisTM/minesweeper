@@ -83,13 +83,42 @@ Game.prototype.neighbors = function (idx) {
     for (var i=0; i<offsets.length; i++) {
         nr = r + offsets[i][0];
         nc = c + offsets[i][1];
-        neighbors.push(nr * this.width + nc);
+        if ((0 <= nc && nc < this.width) && (0 <= nr && nr < this.height)) {
+            neighbors.push(nr * this.width + nc);
+        }
     }
     return neighbors;
 }
 
 Game.prototype.end = function () {
     this.isOver = true;
+}
+
+Game.prototype.clear = function(idx) {
+    if (this.isFlagged[idx]) {
+        return;
+    }
+    
+    this.recursiveClear(idx);
+
+    // fail if they clicked a mine
+    
+    // show result if game over
+}
+
+Game.prototype.recursiveClear = function(idx) {
+    if (this.isRevealed[idx]) {
+        return;
+    }
+
+    this.isRevealed[idx] = true;
+    if (! this.isMine[idx] && this.mineCount[idx] === 0) {
+        var neighIdxs = this.neighbors(idx);
+        for (var i=0; i<neighIdxs.length; i++) {
+            this.recursiveClear(neighIdxs[i]);
+        }
+    }
+
 }
 
 
@@ -146,6 +175,7 @@ var view = (function () {
         var icon = '';
         icon += game.isFlagged[idx] ? '?' : '&nbsp';
         icon += game.isMine[idx] ? '*' : '&nbsp';
+        icon += game.isRevealed[idx] ? '.' : '#';
         icon += game.mineCount[idx];
         return icon;
     }
@@ -188,6 +218,8 @@ $(document).ready(function () {
     // when user clicks a mine field
     $('table').on('click', 'td', function (e) {
         var idx = tdToIdx(e.target);
+        game.clear(idx);
+        view.update();
         // get status
     });
 
