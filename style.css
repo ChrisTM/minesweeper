@@ -38,3 +38,29 @@ td {
 td:hover {
     background-color: #EEE;
 }
+
+td {
+    background-repeat: no-repeat;
+    background-position: center;
+}
+td.open {
+    background-color: #EEE;
+}
+td.closed {
+    background-color: #BBB;
+}
+td.explosion {
+    background-image: url('icons/explosion.png');
+}
+td.flag {
+    background-image: url('icons/flag.png');
+}
+td.badflag {
+    background-image: url('icons/badflag.png');
+}
+td.goodflag {
+    background-image: url('icons/goodflag.png');
+}
+td.mine {
+    background-image: url('icons/mine.png');
+}

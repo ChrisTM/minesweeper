@@ -16,6 +16,7 @@ var Game = function(width, height, numMines) {
     this.isFlagged = []; 
     this.isRevealed = []; 
     this.mineCount = []; 
+    this.explodedIdx;
     this.isOver = false;
 
     for (idx = 0; idx < this.numCells; idx++) { 
@@ -52,22 +53,10 @@ var Game = function(width, height, numMines) {
     }
 };
 
-/*
-var newGame = function(width, height, numMines) {
-    return {
-        width: width,
-        height: height,
-        numMines: numMines,
-        isMine: isMine,
-        isRevealed: isRevlead,
-        isFlagged: isFlagged,
-        mineCount: mineCount,
-        isOver: isOver
-    }
-};
-*/
-
 Game.prototype.toggleFlag = function (idx) {
+    if (this.isOver || this.isRevealed[idx]) {
+        return;
+    }
     this.isFlagged[idx] = this.isFlagged[idx] ? false : true;
 }
 
@@ -79,7 +68,6 @@ Game.prototype.neighbors = function (idx) {
     neighbors = [];
     for (var rDelta = -1; rDelta <= 1; rDelta++) {
         for (var cDelta = -1; cDelta <= 1; cDelta++) {
-            console.log(rDelta, cDelta);
             newR = r + rDelta;
             newC = c + cDelta;
             if ((0 <= newC && newC < this.width) && (0 <= newR && newR < this.height)) {
@@ -91,20 +79,25 @@ Game.prototype.neighbors = function (idx) {
     return neighbors;
 }
 
-Game.prototype.end = function () {
+Game.prototype.end = function (idx) {
+    if (this.isOver) {
+        return;
+    }
     this.isOver = true;
+    this.explodedIdx = idx;
 }
 
 Game.prototype.clear = function(idx) {
-    if (this.isFlagged[idx]) {
+    if (this.isFlagged[idx] || this.isOver) {
         return;
     }
     
     this.recursiveClear(idx);
 
-    // fail if they clicked a mine
-    
-    // show result if game over
+    // end game if they clicked a mine
+    if (this.isMine[idx]) {
+        this.end(idx);
+    }
 }
 
 Game.prototype.recursiveClear = function(idx) {
@@ -152,12 +145,37 @@ var view = (function () {
     // update all table cells to match the game state
     function update(idx) {
         if (idx) {
-            cells[idx].innerHTML = getIconFor(idx);
+            updateCell(idx);
         }
         else { // no idx was given, so update the entire table
             for (idx=0; idx<game.numCells; idx++) {
-                cells[idx].innerHTML = getIconFor(idx);
+                updateCell(idx);
             }
+        }
+    }
+
+    function updateCell(idx) {
+        var $cell = $(cells[idx]);
+        $cell.removeClass();
+
+        if (game.isRevealed[idx]) {
+            $cell.addClass('open');
+        } else {
+            $cell.addClass('closed');
+        }
+
+        if (game.explodedIdx == idx) {
+            $cell.addClass('explosion');
+        } else if (game.isFlagged[idx]) {
+            if (game.isOver) {
+                $cell.addClass(game.isMine[idx] ? 'goodflag' : 'badflag');
+            } else {
+                $cell.addClass('flag');
+            }
+        } else if (game.isOver && game.isMine[idx]) {
+            $cell.addClass('mine');
+        } else if (game.isRevealed[idx]) {
+            $cell.html(game.mineCount[idx]);
         }
     }
 
