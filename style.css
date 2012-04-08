@@ -22,21 +22,36 @@ button {
 
 table {
     margin: auto;
-    border-collapse: collapse;
+    border-collapse: separate;
+    border-spacing: 1px;
     font-size: 2em;
     font-family: monospace;
     line-height: 0;
     text-align: center;
     cursor: default;
+    
+    /* the user might click and drag on the table while they waffle over
+     * deciding to click a field or not. This prevents distracting highlights
+     */
+            user-select: none;
+       -moz-user-select: none;
+    -webkit-user-select: none;
 }
 td {
-    border: 1px solid #AAA;
-    padding: 0.125em;
     width: 1em;
     height: 1em;
+    padding: 0.125em;
+    border-radius: 3px;
+    border-top: 1px solid #CCC;
+    border-left: 1px solid #999;
+    border-right: 1px solid #666;
+    border-bottom: 1px solid #333;
 }
-td:hover {
-    background-color: #EEE;
+td.depressed {
+    border-top: 1px solid #333;
+    border-left: 1px solid #666;
+    border-right: 1px solid #999;
+    border-bottom: 1px solid #CCC;
 }
 
 td {
@@ -44,10 +59,12 @@ td {
     background-position: center;
 }
 td.open {
+    border-radius: 0;
+    border: 1px solid #CCC;
     background-color: #EEE;
 }
 td.closed {
-    background-color: #BBB;
+    background-color: #CCC;
 }
 td.explosion {
     background-image: url('icons/explosion.png');

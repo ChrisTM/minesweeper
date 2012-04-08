@@ -211,6 +211,7 @@ var view = (function () {
 // CONTROLLER
 $(document).ready(function () {
     var game;
+    var depressedCell = null;
 
     function newGame() {
         game = new Game(8, 8, 10);
@@ -250,9 +251,33 @@ $(document).ready(function () {
         e.preventDefault();
     });
 
-    // right-clicking on the borders would trigger context menu, we disable that here
+    // right-clicking on the borders would trigger context menu -- an annoying
+    // behavior that we disable here
     $('table').on('contextmenu', function(e) {
         e.preventDefault();
+    });
+
+    // these mousedown/up/out/enter handlers set and remove the 'depressed'
+    // class so that the cells respond to clicks like traditional desktop GUI
+    // buttons
+    $('table').on('mousedown', 'td', function(e) {
+        depressedCell = e.target.id;
+        $(e.target).addClass('depressed');
+    });
+
+    $('table').on('mouseup', 'td', function(e) {
+        depressedCell = null;
+        $(e.target).removeClass('depressed');
+    });
+
+    $('table').on('mouseout', 'td', function(e) {
+        $(e.target).removeClass('depressed');
+    });
+
+    $('table').on('mouseenter', 'td', function(e) {
+        if (e.target.id === depressedCell) {
+            $(e.target).addClass('depressed');
+        }
     });
 
     newGame();
