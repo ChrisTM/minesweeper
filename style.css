@@ -24,8 +24,7 @@ table {
     margin: auto;
     border-collapse: separate;
     border-spacing: 1px;
-    font-size: 2em;
-    font-family: monospace;
+    font-size: 1.75em;
     line-height: 0;
     text-align: center;
     cursor: default;
@@ -38,7 +37,7 @@ table {
     -webkit-user-select: none;
 }
 td {
-    width: 1em;
+    width:  1em;
     height: 1em;
     padding: 0.125em;
     border-radius: 3px;

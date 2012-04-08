@@ -12,12 +12,14 @@ var Game = function(width, height, numMines) {
     this.width = width; 
     this.height = height; 
     this.numCells = width * height; 
+    this.numMines = numMines;
     this.isMine = []; 
     this.isFlagged = []; 
     this.isRevealed = []; 
     this.mineCount = []; 
     this.explodedIdx;
     this.isOver = false;
+    this.minesArePlaced = false;
 
     for (idx = 0; idx < this.numCells; idx++) { 
         this.isMine[idx] = false; 
@@ -25,20 +27,43 @@ var Game = function(width, height, numMines) {
         this.isRevealed[idx] = false; 
         this.mineCount[idx] = 0; 
     }
+};
+
+
+Game.prototype.placeMines = function (avoidIdx) {
+    console.log("adding");
+    // a human mine-placement avoids placing mines at or around the user's
+    // first clicked field.
+    //
+    // We approach this by shuffling the mines evenly into all the fields
+    // except the last few (corresponding to the number of fields that will need
+    // to be avoided).  We swap these empty fields with the actual fields that
+    // are supposed to be avoided.
+    var idx;
 
     // add the mines to the beginning of the board
-    for (idx = 0; idx < numMines; idx++) { 
+    for (idx = 0; idx < this.numMines; idx++) { 
         this.isMine[idx] = true;
     }
 
-    // shuffle the mines in
-    for (idx = this.numCells - 1; idx >= 0; idx--) {
+    // figure out which fields to avoid
+    var avoidIdxs = this.neighbors(avoidIdx);
+    console.log(avoidIdxs);
+
+    // shuffle the mines in, leaving the last `avoidIdxs.length` fields alone/empty.
+    for (idx = this.numCells - 1 - avoidIdxs.length; idx >= 0; idx--) {
         var rand = Math.floor(Math.random() * (idx + 1));
         var tmp = this.isMine[idx];
         this.isMine[idx] = this.isMine[rand];
         this.isMine[rand] = tmp;
     }
-    
+
+    // Put the mines that are in the avoid fields into the empty fields at the end
+    for (var i = 0; i < avoidIdxs.length; i++) {
+        this.isMine[this.numCells - 1 - i] = this.isMine[avoidIdxs[i]];
+        this.isMine[avoidIdxs[i]] = false;
+    }
+
     // add the neighbor counts
     for (idx = 0; idx < this.numCells; idx++) {
         // THOUGHT: this mapping and filtering is encouraging me to create
@@ -51,7 +76,7 @@ var Game = function(width, height, numMines) {
         });
         this.mineCount[idx] = neighWithMines.length;
     }
-};
+}
 
 Game.prototype.toggleFlag = function (idx) {
     if (this.isOver || this.isRevealed[idx]) {
@@ -60,6 +85,7 @@ Game.prototype.toggleFlag = function (idx) {
     this.isFlagged[idx] = this.isFlagged[idx] ? false : true;
 }
 
+// return list of cell's neighbors and the cell itself
 Game.prototype.neighbors = function (idx) {
     var r, c, newR, newC, neighbors, offsets;
     r = Math.floor(idx / this.width);
@@ -88,6 +114,11 @@ Game.prototype.end = function (idx) {
 }
 
 Game.prototype.clear = function(idx) {
+    if (this.minesArePlaced === false) {
+        this.placeMines(idx);
+        this.minesArePlaced = true;
+    }
+
     if (this.isFlagged[idx] || this.isOver) {
         return;
     }
@@ -257,12 +288,15 @@ $(document).ready(function () {
         e.preventDefault();
     });
 
+
     // these mousedown/up/out/enter handlers set and remove the 'depressed'
     // class so that the cells respond to clicks like traditional desktop GUI
     // buttons
     $('table').on('mousedown', 'td', function(e) {
-        depressedCell = e.target.id;
-        $(e.target).addClass('depressed');
+        if (! game.isOver) {
+            depressedCell = e.target.id;
+            $(e.target).addClass('depressed');
+        }
     });
 
     $('table').on('mouseup', 'td', function(e) {
