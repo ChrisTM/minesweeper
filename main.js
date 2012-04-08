@@ -31,7 +31,6 @@ var Game = function(width, height, numMines) {
 
 
 Game.prototype.placeMines = function (avoidIdx) {
-    console.log("adding");
     // a human mine-placement avoids placing mines at or around the user's
     // first clicked field.
     //
@@ -47,8 +46,7 @@ Game.prototype.placeMines = function (avoidIdx) {
     }
 
     // figure out which fields to avoid
-    var avoidIdxs = this.neighbors(avoidIdx);
-    console.log(avoidIdxs);
+    var avoidIdxs = [avoidIdx].concat(this.neighbors(avoidIdx));
 
     // shuffle the mines in, leaving the last `avoidIdxs.length` fields alone/empty.
     for (idx = this.numCells - 1 - avoidIdxs.length; idx >= 0; idx--) {
@@ -85,7 +83,7 @@ Game.prototype.toggleFlag = function (idx) {
     this.isFlagged[idx] = this.isFlagged[idx] ? false : true;
 }
 
-// return list of cell's neighbors and the cell itself
+// return list of cell's neighbors
 Game.prototype.neighbors = function (idx) {
     var r, c, newR, newC, neighbors, offsets;
     r = Math.floor(idx / this.width);
@@ -94,6 +92,9 @@ Game.prototype.neighbors = function (idx) {
     neighbors = [];
     for (var rDelta = -1; rDelta <= 1; rDelta++) {
         for (var cDelta = -1; cDelta <= 1; cDelta++) {
+            if (rDelta === 0 && cDelta === 0) {
+                continue; // don't count self as neighbor
+            }
             newR = r + rDelta;
             newC = c + cDelta;
             if ((0 <= newC && newC < this.width) && (0 <= newR && newR < this.height)) {
@@ -128,6 +129,24 @@ Game.prototype.clear = function(idx) {
     // end game if they clicked a mine
     if (this.isMine[idx]) {
         this.end(idx);
+    }
+}
+
+Game.prototype.surroundClear = function(idx) {
+    if (this.isRevealed[idx]) {
+        // go ahead if the user has flagged the right amount of surrounding mines
+        var neighIdxs = this.neighbors(idx);
+        var flagCount = 0;
+        for (var i = 0; i < neighIdxs.length; i++) {
+            if (this.isFlagged[neighIdxs[i]]) {
+                flagCount++;
+            }
+        }
+        if (flagCount === this.mineCount[idx]) {
+            for (var i = 0; i < neighIdxs.length; i++) {
+                this.clear(neighIdxs[i]);
+            }
+        }
     }
 }
 
@@ -210,26 +229,6 @@ var view = (function () {
         }
     }
 
-    // return the character that represents the state that cell-idx is in.
-    function getIconFor(idx) {
-        /* Unrevealed icons...
-         *   Unflagged: #
-         *   Flagged: ? 
-         * Revealed icons...
-         *   No mine: <space> 1 2 3 4 5 6 7 8
-         *   Unflagged mine: *
-         *   Correctly flagged mine: +
-         *   Incorrectly flagged mine: -
-         *   Exploded mine: X
-         */
-        var icon = '';
-        icon += game.isFlagged[idx] ? '?' : '&nbsp';
-        icon += game.isMine[idx] ? '*' : '&nbsp';
-        icon += game.isRevealed[idx] ? '.' : '#';
-        icon += game.mineCount[idx];
-        return icon;
-    }
-
     return { 
         init: init,
         update: update,
@@ -242,7 +241,7 @@ var view = (function () {
 // CONTROLLER
 $(document).ready(function () {
     var game;
-    var depressedCell = null;
+    var depressedCells = [];
 
     function newGame() {
         game = new Game(8, 8, 10);
@@ -261,57 +260,80 @@ $(document).ready(function () {
     });
 
     $('#validate').on('click', function(e) {
-        // TODO: for now, this just reveals everything, doesn't score, etc.
+        // TODO: add some feedback like win/loss/whatever
         game.end();
         view.update();
     });
 
-    // when user clicks a mine field
-    $('table').on('click', 'td', function (e) {
-        var idx = tdToIdx(e.target);
-        game.clear(idx);
-        view.update();
-        // get status
-    });
-
-    // when user right-clicks on a mine field
-    $('table').on('contextmenu', 'td', function (e) {
-        var idx = tdToIdx(e.target);
-        game.toggleFlag(idx);
-        view.update(idx);
-        e.preventDefault();
-    });
-
-    // right-clicking on the borders would trigger context menu -- an annoying
+    // right-clicking on the cell borders would trigger context menu -- an annoying
     // behavior that we disable here
-    $('table').on('contextmenu', function(e) {
+    $('table').on('contextmenu', function (e) {
         e.preventDefault();
     });
 
-
-    // these mousedown/up/out/enter handlers set and remove the 'depressed'
-    // class so that the cells respond to clicks like traditional desktop GUI
-    // buttons
-    $('table').on('mousedown', 'td', function(e) {
+    // We use these mousedown/up/out/enter handlers instead of just 'click'
+    // because we also want to set and remove the 'depressed' class so that the
+    // fields consistently behave (both in effect and visually) like desktop
+    // GUI buttons.
+    $('table').on('mousedown', 'td', function (e) {
         if (! game.isOver) {
-            depressedCell = e.target.id;
-            $(e.target).addClass('depressed');
+            depressedCells = [e.target];
+            if (e.which === 2) { // MMB
+                var neighborIdxs = game.neighbors(tdToIdx(e.target));
+                for (var i = 0; i < neighborIdxs.length; i++) {
+                    depressedCells.push(
+                        document.getElementById('cell-' + neighborIdxs[i])
+                    );
+                }
+            }
+            $(depressedCells).addClass('depressed');
         }
     });
 
-    $('table').on('mouseup', 'td', function(e) {
-        depressedCell = null;
-        $(e.target).removeClass('depressed');
+    $('table').on('mouseup', 'td', function (e) {
+        var idx = tdToIdx(e.target);
+        if (e.target === depressedCells[0]) {
+            switch(e.which) {
+                case 1: // LMB clears a mine    
+                    game.clear(idx);
+                    break;
+                case 2: // MMB clears surrounding mines
+                    game.surroundClear(idx);
+                    break;
+                case 3: // RMB toggles a flag
+                    game.toggleFlag(idx);
+                    e.preventDefault();
+                    break;
+            }
+            view.update();
+        }
+        $(depressedCells).removeClass('depressed');
+        depressedCells = [];
     });
 
+    $(document).on('mouseup', function (e) {
+        $(depressedCells).removeClass('depressed');
+        depressedCells = [];
+    });
+
+
     $('table').on('mouseout', 'td', function(e) {
-        $(e.target).removeClass('depressed');
+        if (e.target === depressedCells[0]) {
+            $(depressedCells).removeClass('depressed');
+        }
     });
 
     $('table').on('mouseenter', 'td', function(e) {
-        if (e.target.id === depressedCell) {
-            $(e.target).addClass('depressed');
+        if (e.target === depressedCells[0]) {
+            $(depressedCells).addClass('depressed');
         }
+    });
+
+    // clicking and dragging in the right spot of a cell will cause a drag
+    // event, preventing the mouseup from firing, causing depressedCells not to
+    // clear. We prevent the drag so that this doesn't happen.
+    $('table').on('dragstart', function (e) {
+        e.preventDefault();
     });
 
     newGame();
