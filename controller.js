@@ -7,16 +7,11 @@ $(document).ready(function () {
                    };
     var game, view;
     var depressedCells = [];
+    // keypresses go into the buffer. We check for when it equals the cheat word.
     var cheating = false;
 
     function newGame() {
-        /*
-        small:  ( 8,  8, 10)
-        medium: (16, 16, 40)
-        large:  (16, 32, 80)
-        */
         var setting = settings[$('#setting').val()];
-        console.log(setting);
         game = createGame.apply(this, setting);
         view = createView(game, $('table'));
         view.init();
@@ -32,13 +27,8 @@ $(document).ready(function () {
     });
 
     $('#validate').on('click', function(e) {
-        // TODO: add some feedback like win/loss/whatever
         game.end();
         view.update();
-    });
-
-    $('#cheat').on('click', function(e) {
-        cheating = e.target.checked;
     });
 
     // right-clicking on the cell borders would trigger context menu -- an annoying
@@ -124,6 +114,33 @@ $(document).ready(function () {
     // clear. We prevent the drag so that this doesn't happen.
     $('table').on('dragstart', function (e) {
         e.preventDefault();
+    });
+
+    /* turn on cheating when the user types 'xyzzy' */
+    var cheatWord = [88, 89, 90, 90, 89]; // xyzzy
+    var cheatBuffer = new Array(cheatWord.length);
+    $(document).on('keydown', function (e) {
+        cheatBuffer.push(e.which);
+        cheatBuffer.shift();
+
+        console.log(cheatBuffer, cheatWord);
+        for (var i = 0; i < cheatBuffer.length; i++) {
+            if (cheatBuffer[i] !== cheatWord[i]) {
+                return; // happens when cheat code failed
+            }
+        }
+
+        if (cheating) {
+            cheating = false;
+            $('#title').css('transform', 'none');
+            $('#title').css('-webkit-transform', 'none');
+            $('#title').css('-moz-transform', 'none');
+        } else {
+            cheating = true;
+            $('#title').css('transform', 'rotate(180deg)');
+            $('#title').css('-webkit-transform', 'rotate(180deg)');
+            $('#title').css('-moz-transform', 'rotate(180deg)');
+        }
     });
 
     newGame();

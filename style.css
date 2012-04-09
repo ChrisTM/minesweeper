@@ -9,12 +9,12 @@ body {
 }
 
 #cheat-pixel {
-    width: 2px;
-    height: 2px;
+    width:  3px;
+    height: 3px;
     background-color: red;
     position: absolute;
-    top:  1px;
-    left: 1px;
+    top:  2px;
+    left: 2px;
     display: none;
 }
 
@@ -24,7 +24,7 @@ h1 {
 }
 
 /* the properties that let the win/lose banner slide in */
-#header { height: 3.5em; overflow: hidden; }
+#header { height: 3em; overflow: hidden; }
 #header h1 {
     font-weight: normal;
     position: relative;
@@ -52,7 +52,6 @@ button, input, select {
 #validate {
     margin-left: 1em;
 }
-
 
 
 table {
