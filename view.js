@@ -19,12 +19,20 @@ var createView = (function (game, $table) {
             contents.appendChild(row);
         }
         $table.html(contents);
+
+        // reset the win/lose header status
+        $('#header').removeClass();
     }
 
     // update all table cells to match the game state
     var update = function () {
         for (var idx=0; idx<game.numCells; idx++) {
             updateCell(idx);
+        }
+
+        if (game.isOver()) {
+            $('#header').removeClass();
+            $('#header').addClass(game.isWon() ? 'win' : 'lose');
         }
     }
 

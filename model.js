@@ -7,14 +7,17 @@ var createGame = function(width, height, numMines) {
     var isFlagged = [];
     var isRevealed = [];
     var mineCount = [];
+    var indices = [];
     var explodedIdx;
     var isOver = false;
     var minesArePlaced = false;
+    var isWon;
 
     for (idx = 0; idx < numCells; idx++) {
         isMine[idx] = false;
         isFlagged[idx] = false;
         isRevealed[idx] = false;
+        indices[idx] = idx;
         mineCount[idx] = 0;
     }
 
@@ -75,6 +78,10 @@ var createGame = function(width, height, numMines) {
         } else {
             recursiveClear(idx);
         }
+
+        if (isWin()) {
+            end();
+        }
     }
 
     var surroundClear = function(idx) {
@@ -104,10 +111,19 @@ var createGame = function(width, height, numMines) {
 
     }
 
+    var isWin = function () {
+        var correctlyFlagged = indices.filter(function (idx) {
+            return (isMine[idx] && isFlagged[idx]);
+        });
+        return (correctlyFlagged.length === numMines);
+    }
+
     var end = function (idx) {
         console.log("Game ending");
         isOver = true;
         explodedIdx = idx;
+
+        isWon = isWin();
     }
 
     var toggleFlag = function (idx) {
@@ -154,5 +170,6 @@ var createGame = function(width, height, numMines) {
            , 'isRevealed': function (idx) { return isRevealed[idx] }
            , 'isFlagged': function (idx) { return isFlagged[idx] }
            , 'mineCount': function (idx) { return mineCount[idx] }
+           , 'isWon': function (idx) { return isWon }
            }
 };

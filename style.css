@@ -13,6 +13,21 @@ h1 {
     line-height: 1.5em;
 }
 
+/* the properties that let the win/lose banner slide in */
+#header { height: 3.5em; overflow: hidden; }
+#header h1 {
+    position: relative;
+    top: -1.5em;
+           -transition: top 300ms ease-in;
+       -moz-transition: top 300ms ease-in;
+    -webkit-transition: top 300ms ease-in;
+}
+#header.lose h1 { top:  0.0em; }
+#header.win h1  { top: -3.0em; }
+#header #lose { color: red;   font-weight: bold; }
+#header #win  { color: green; font-weight: bold; }
+
+
 button {
     padding: 0.5em;
     margin: 1.5em 0;
@@ -28,7 +43,7 @@ table {
     line-height: 0;
     text-align: center;
     cursor: default;
-    
+
     /* the user might click and drag on the table while they waffle over
      * deciding to click a field or not. This prevents distracting highlights
      */
@@ -37,8 +52,8 @@ table {
     -webkit-user-select: none;
 }
 td {
-    width:  1em;
-    height: 1em;
+    width:  1.25em;
+    height: 1.25em;
     padding: 0.125em;
     border-radius: 3px;
     border-top: 1px solid #CCC;
