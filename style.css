@@ -100,17 +100,17 @@ td.closed {
     background-color: #CCC;
 }
 td.explosion {
-    background-image: url('icons/explosion.png');
+    background-image: url('icons/explosion.gif');
 }
 td.flag {
-    background-image: url('icons/flag.png');
+    background-image: url('icons/flag.gif');
 }
 td.badflag {
-    background-image: url('icons/badflag.png');
+    background-image: url('icons/badflag.gif');
 }
 td.goodflag {
-    background-image: url('icons/goodflag.png');
+    background-image: url('icons/goodflag.gif');
 }
 td.mine {
-    background-image: url('icons/mine.png');
+    background-image: url('icons/mine.gif');
 }

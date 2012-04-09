@@ -105,6 +105,7 @@ var createGame = function(width, height, numMines) {
         }
 
         isRevealed[idx] = true;
+        isFlagged[idx] = false;
         if (! isMine[idx] && mineCount[idx] === 0) {
             neighbors(idx).map(recursiveClear);
         }
