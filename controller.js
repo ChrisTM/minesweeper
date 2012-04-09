@@ -1,6 +1,10 @@
 'use strict';
 
 $(document).ready(function () {
+    var settings = { 'small':  [ 8,  8, 10]
+                   , 'medium': [16, 16, 40]
+                   , 'large':  [32, 16, 80]
+                   };
     var game, view;
     var depressedCells = [];
     var cheating = false;
@@ -11,7 +15,9 @@ $(document).ready(function () {
         medium: (16, 16, 40)
         large:  (16, 32, 80)
         */
-        game = createGame(8, 8, 10);
+        var setting = settings[$('#setting').val()];
+        console.log(setting);
+        game = createGame.apply(this, setting);
         view = createView(game, $('table'));
         view.init();
         view.update();

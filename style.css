@@ -39,18 +39,20 @@ h1 {
 #header #win  { color: green; font-weight: bold; }
 
 
-button, input {
+button, input, select {
     font-size: inherit;
 }
 
-button, label {
+#setting, #new-game, #validate  {
     padding: 0.5em;
+    text-align: center;
     margin: 1.5em 0.5em;
-    width: 7em;
 }
-input {
-    margin-right: 0.5em;
+
+#validate {
+    margin-left: 1em;
 }
+
 
 
 table {

@@ -21,9 +21,12 @@
         <h1 id=win>You Win!</h1>
     </div>
 
+    <label>Game Size: <select id=setting required>
+        <option value=small>Small size</option>
+        <option value=medium>Medium size</option>
+        <option value=large>Large size</option>
+    </select> </label>
     <button type=button id=new-game>New Game</button>
-    <button type=button id=validate>Validate</button>
-    <label for=cheat><input type=checkbox id=cheat>Cheat</label>
 
     <table id=board>
         <tr>
@@ -51,6 +54,8 @@
             <td>1</td>
         </tr>
     </table>
+    <button type=button id=validate>Validate</button>
+    <label for=cheat><input type=checkbox id=cheat>Cheat</label>
 </body>
 
 </html>
