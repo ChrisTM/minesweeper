@@ -3,6 +3,7 @@
 $(document).ready(function () {
     var game, view;
     var depressedCells = [];
+    var cheating = false;
 
     function newGame() {
         /*
@@ -28,6 +29,10 @@ $(document).ready(function () {
         // TODO: add some feedback like win/loss/whatever
         game.end();
         view.update();
+    });
+
+    $('#cheat').on('click', function(e) {
+        cheating = e.target.checked;
     });
 
     // right-clicking on the cell borders would trigger context menu -- an annoying
@@ -91,11 +96,20 @@ $(document).ready(function () {
         if (e.target === depressedCells[0]) {
             $(depressedCells).removeClass('depressed');
         }
+        $('#cheat-pixel').hide();
     });
 
     $('table').on('mouseenter', 'td', function(e) {
         if (e.target === depressedCells[0]) {
             $(depressedCells).addClass('depressed');
+        }
+
+        if (cheating) {
+            if (game.isMine(tdToIdx(e.target))) {
+                $('#cheat-pixel').show();
+            } else {
+                $('#cheat-pixel').hide();
+            }
         }
     });
 

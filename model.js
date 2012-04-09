@@ -112,10 +112,10 @@ var createGame = function(width, height, numMines) {
     }
 
     var isWin = function () {
-        var correctlyFlagged = indices.filter(function (idx) {
-            return (isMine[idx] && isFlagged[idx]);
-        });
-        return (correctlyFlagged.length === numMines);
+        var numRevealed = indices.filter(function (idx) {
+            return (isRevealed[idx]);
+        }).length;
+        return (numRevealed + numMines === numCells);
     }
 
     var end = function (idx) {
