@@ -120,7 +120,9 @@ var createGame = function(width, height, numMines) {
     }
 
     var end = function (idx) {
-        console.log("Game ending");
+        if (isOver) {
+            return;
+        }
         isOver = true;
         explodedIdx = idx;
 
