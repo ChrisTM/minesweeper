@@ -22,11 +22,11 @@ $(document).ready(function () {
         return parseInt(cell.id.slice('cell-'.length));
     }
 
-    $('#new-game').on('click', function(e) {
+    $('#new-game').on('click', function (e) {
         newGame();
     });
 
-    $('#validate').on('click', function(e) {
+    $('#validate').on('click', function (e) {
         game.end();
         view.update();
     });
@@ -61,17 +61,14 @@ $(document).ready(function () {
         var idx = tdToIdx(e.target);
         // check if mouse is released on same field mouse was pressed
         if (e.target === depressedCells[0]) {
-            switch(e.which) {
+            switch (e.which) {
                 case 1: // LMB clears a mine
-                    console.log('LMB click');
                     game.clear(idx);
                     break;
                 case 2: // MMB clears surrounding mines
-                    console.log('MMB click');
                     game.surroundClear(idx);
                     break;
                 case 3: // RMB toggles a flag
-                    console.log('RMB click');
                     game.toggleFlag(idx);
                     e.preventDefault();
                     break;
@@ -88,14 +85,14 @@ $(document).ready(function () {
     });
 
 
-    $('table').on('mouseout', 'td', function(e) {
+    $('table').on('mouseout', 'td', function (e) {
         if (e.target === depressedCells[0]) {
             $(depressedCells).removeClass('depressed');
         }
         $('#cheat-pixel').hide();
     });
 
-    $('table').on('mouseenter', 'td', function(e) {
+    $('table').on('mouseenter', 'td', function (e) {
         if (e.target === depressedCells[0]) {
             $(depressedCells).addClass('depressed');
         }
@@ -123,7 +120,6 @@ $(document).ready(function () {
         cheatBuffer.push(e.which);
         cheatBuffer.shift();
 
-        console.log(cheatBuffer, cheatWord);
         for (var i = 0; i < cheatBuffer.length; i++) {
             if (cheatBuffer[i] !== cheatWord[i]) {
                 return; // happens when cheat code failed

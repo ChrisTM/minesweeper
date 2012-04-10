@@ -1,6 +1,6 @@
 'use strict';
 
-var createGame = function(width, height, numMines) {
+var createGame = function (width, height, numMines) {
     var idx;
     var numCells = width * height;
     var isMine = [];
@@ -56,14 +56,13 @@ var createGame = function(width, height, numMines) {
         }
 
         // add the neighbor counts
+        var isMineFn = function (idx) { return isMine[idx]; };
         for (idx = 0; idx < numCells; idx++) {
-            mineCount[idx] = neighbors(idx).filter(function (idx) {
-                return isMine[idx];
-            }).length;
+            mineCount[idx] = neighbors(idx).filter(isMineFn).length;
         }
-    }
+    };
 
-    var clear = function(idx) {
+    var clear = function (idx) {
         if (isFlagged[idx] || isOver) {
             return;
         }
@@ -82,9 +81,9 @@ var createGame = function(width, height, numMines) {
         if (isWin()) {
             end();
         }
-    }
+    };
 
-    var surroundClear = function(idx) {
+    var surroundClear = function (idx) {
         if (isRevealed[idx]) {
             // go ahead if the user has flagged the right amount of surrounding
             // mines
@@ -97,9 +96,9 @@ var createGame = function(width, height, numMines) {
                 neighIdxs.forEach(clear);
             }
         }
-    }
+    };
 
-    var recursiveClear = function(idx) {
+    var recursiveClear = function (idx) {
         if (isRevealed[idx]) {
             return;
         }
@@ -110,14 +109,14 @@ var createGame = function(width, height, numMines) {
             neighbors(idx).map(recursiveClear);
         }
 
-    }
+    };
 
     var isWin = function () {
         var numRevealed = indices.filter(function (idx) {
             return (isRevealed[idx]);
         }).length;
         return (numRevealed + numMines === numCells);
-    }
+    };
 
     var end = function (idx) {
         if (isOver) {
@@ -127,14 +126,14 @@ var createGame = function(width, height, numMines) {
         explodedIdx = idx;
 
         isWon = isWin();
-    }
+    };
 
     var toggleFlag = function (idx) {
         if (isOver || isRevealed[idx]) {
             return;
         }
         isFlagged[idx] = isFlagged[idx] ? false : true;
-    }
+    };
 
     // return list of cell's neighbors
     var neighbors = function (idx) {
@@ -146,16 +145,15 @@ var createGame = function(width, height, numMines) {
                   , [-1, 1], [ 0, 1], [ 1, 1]
                   ];
         neighbors = [];
-        for (var i=0; i<offsets.length; i++) {
+        for (var i = 0; i < offsets.length; i++) {
             newR = r + offsets[i][0];
             newC = c + offsets[i][1];
-            if ((0 <= newC && newC < width)
-                    && (0 <= newR && newR < height)) {
+            if ((0 <= newC && newC < width) && (0 <= newR && newR < height)) {
                 neighbors.push(newR * width + newC);
             }
         }
         return neighbors;
-    }
+    };
 
     // we expose the things needed by the controller and the view
     return { 'toggleFlag': toggleFlag
@@ -168,11 +166,11 @@ var createGame = function(width, height, numMines) {
            , 'numMines': numMines
            , 'numCells': numCells
            , 'getExplodedIdx': function () { return explodedIdx; }
-           , 'isOver': function () { return isOver }
-           , 'isMine': function (idx) { return isMine[idx] }
-           , 'isRevealed': function (idx) { return isRevealed[idx] }
-           , 'isFlagged': function (idx) { return isFlagged[idx] }
-           , 'mineCount': function (idx) { return mineCount[idx] }
-           , 'isWon': function (idx) { return isWon }
-           }
+           , 'isOver': function () { return isOver; }
+           , 'isMine': function (idx) { return isMine[idx]; }
+           , 'isRevealed': function (idx) { return isRevealed[idx]; }
+           , 'isFlagged': function (idx) { return isFlagged[idx]; }
+           , 'mineCount': function (idx) { return mineCount[idx]; }
+           , 'isWon': function (idx) { return isWon; }
+           };
 };
