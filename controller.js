@@ -26,11 +26,6 @@ $(document).ready(function () {
         newGame();
     });
 
-    $('#validate').on('click', function (e) {
-        game.end();
-        view.update();
-    });
-
     // right-clicking on the cell borders would trigger context menu -- an annoying
     // behavior that we disable here
     $('table').on('contextmenu', function (e) {

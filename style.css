@@ -47,8 +47,11 @@ button, input, select {
     text-align: center;
     margin: 1.5em 0.5em;
 }
-#validate {
-    margin-left: 1em;
+
+p {
+    margin: auto;
+    margin-top: 1em;
+    width: 25em;
 }
 
 
