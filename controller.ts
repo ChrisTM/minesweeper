@@ -1,7 +1,12 @@
 import { createGame } from './model';
 import { createView } from './view';
 
-$(document).ready(() => {
+document.addEventListener('DOMContentLoaded', () => {
+  const table = document.querySelector('table');
+  const title: HTMLElement = document.querySelector('#title');
+  const cheatPixel: HTMLElement = document.querySelector('#cheat-pixel');
+  const newGameButton = document.querySelector('#new-game');
+
   const settings = {
     small: [8, 8, 10],
     medium: [16, 16, 40],
@@ -14,7 +19,8 @@ $(document).ready(() => {
   let cheating = false;
 
   function newGame() {
-    const setting = settings[$('#setting').val()];
+    const settingEl: HTMLSelectElement = document.querySelector('#setting');
+    const setting = settings[settingEl.value];
     game = createGame.apply(this, setting);
     view = createView(game, $('table'));
     view.init();
@@ -25,13 +31,13 @@ $(document).ready(() => {
     return parseInt(cell.id.slice('cell-'.length));
   }
 
-  $('#new-game').on('click', e => {
+  newGameButton.addEventListener('click', e => {
     newGame();
   });
 
   // right-clicking on the cell borders would trigger context menu -- an annoying
   // behavior that we disable here
-  $('table').on('contextmenu', e => {
+  table.addEventListener('contextmenu', e => {
     e.preventDefault();
   });
 
@@ -39,7 +45,9 @@ $(document).ready(() => {
   // because we also want to set and remove the 'depressed' class so that the
   // fields consistently behave (both in effect and visually) like desktop
   // GUI buttons.
-  $('table').on('mousedown', 'td', e => {
+  table.addEventListener('mousedown', e => {
+    const innerEl = (e.target as Element).closest('td');
+    if (!innerEl || !(e.currentTarget as Element).contains(innerEl)) return;
     if (!game.isOver()) {
       depressedCells = [e.target];
       if (e.which === 2) {
@@ -53,7 +61,9 @@ $(document).ready(() => {
     }
   });
 
-  $('table').on('mouseup', 'td', e => {
+  table.addEventListener('mouseup', e => {
+    const innerEl = (e.target as Element).closest('td');
+    if (!innerEl || !(e.currentTarget as Element).contains(innerEl)) return;
     const idx = tdToIdx(e.target);
     // check if mouse is released on same field mouse was pressed
     if (e.target === depressedCells[0]) {
@@ -75,28 +85,32 @@ $(document).ready(() => {
     depressedCells = [];
   });
 
-  $(document).on('mouseup', e => {
+  document.addEventListener('mouseup', e => {
     $(depressedCells).removeClass('depressed');
     depressedCells = [];
   });
 
-  $('table').on('mouseout', 'td', e => {
-    if (e.target === depressedCells[0]) {
-      $(depressedCells).removeClass('depressed');
+  table.addEventListener('mouseout', e => {
+    const target = e.target as HTMLElement;
+    if (target === depressedCells[0]) {
+      target.classList.remove('depressed');
     }
-    $('#cheat-pixel').hide();
+    cheatPixel.style.display = 'none';
   });
 
-  $('table').on('mouseenter', 'td', e => {
-    if (e.target === depressedCells[0]) {
-      $(depressedCells).addClass('depressed');
+  table.addEventListener('mouseenter', e => {
+    const target = e.target as HTMLElement;
+    const innerEl = (target as Element).closest('td');
+    if (!innerEl || !(e.currentTarget as Element).contains(innerEl)) return;
+    if (target === depressedCells[0]) {
+      target.classList.remove('depressed');
     }
 
     if (cheating) {
-      if (game.isMine(tdToIdx(e.target))) {
-        $('#cheat-pixel').show();
+      if (game.isMine(tdToIdx(target))) {
+        cheatPixel.style.display = 'block';
       } else {
-        $('#cheat-pixel').hide();
+        cheatPixel.style.display = 'none';
       }
     }
   });
@@ -104,14 +118,14 @@ $(document).ready(() => {
   // clicking and dragging in the right spot of a cell will cause a drag
   // event, preventing the mouseup from firing, causing depressedCells not to
   // clear. We prevent the drag so that this doesn't happen.
-  $('table').on('dragstart', e => {
+  table.addEventListener('dragstart', e => {
     e.preventDefault();
   });
 
   /* turn on cheating when the user types 'xyzzy' */
   const cheatWord = [88, 89, 90, 90, 89]; // xyzzy
   const cheatBuffer = new Array(cheatWord.length);
-  $(document).on('keydown', e => {
+  document.addEventListener('keydown', e => {
     cheatBuffer.push(e.which);
     cheatBuffer.shift();
 
@@ -123,14 +137,10 @@ $(document).ready(() => {
 
     if (cheating) {
       cheating = false;
-      $('#title').css('transform', 'none');
-      $('#title').css('-webkit-transform', 'none');
-      $('#title').css('-moz-transform', 'none');
+      title.style.transform = 'none';
     } else {
       cheating = true;
-      $('#title').css('transform', 'rotate(180deg)');
-      $('#title').css('-webkit-transform', 'rotate(180deg)');
-      $('#title').css('-moz-transform', 'rotate(180deg)');
+      title.style.transform = 'rotate(180deg)';
     }
   });
 
