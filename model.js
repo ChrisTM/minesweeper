@@ -161,34 +161,34 @@ const createGame = (width, height, numMines) => {
 
   // we expose the things needed by the controller and the view
   return {
-    toggleFlag: toggleFlag,
-    clear: clear,
-    neighbors: neighbors,
-    end: end,
-    surroundClear: surroundClear,
-    width: width,
-    height: height,
-    numMines: numMines,
-    numCells: numCells,
-    getExplodedIdx: function() {
+    toggleFlag,
+    clear,
+    neighbors,
+    end,
+    surroundClear,
+    width,
+    height,
+    numMines,
+    numCells,
+    getExplodedIdx() {
       return explodedIdx;
     },
-    isOver: function() {
+    isOver() {
       return isOver;
     },
-    isMine: function(idx) {
+    isMine(idx) {
       return isMine[idx];
     },
-    isRevealed: function(idx) {
+    isRevealed(idx) {
       return isRevealed[idx];
     },
-    isFlagged: function(idx) {
+    isFlagged(idx) {
       return isFlagged[idx];
     },
-    mineCount: function(idx) {
+    mineCount(idx) {
       return mineCount[idx];
     },
-    isWon: function(idx) {
+    isWon(idx) {
       return isWon;
     },
   };
