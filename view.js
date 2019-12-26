@@ -3,24 +3,24 @@
  * later releases.
  */
 
-var createView = ((game, $table) => {
-    var cells = []; //a quick way to look up the DOM cell given its index
+const createView = ((game, $table) => {
+    const cells = []; //a quick way to look up the DOM cell given its index
 
     // create a new table to fit the game
-    var init = () => {
-        var r;
-        var c;
-        var contents;
-        var idx;
-        var row;
-        var cell;
+    const init = () => {
+        let r;
+        let c;
+        let contents;
+        let idx;
+        let row;
+        let cell;
         contents = document.createDocumentFragment();
         for (r=0; r<game.height; r++) {
             row = document.createElement('tr');
             for (c=0; c<game.width; c++) {
                 cell = document.createElement('td');
                 idx = r * game.width + c;
-                cell.id = "cell-" + idx;
+                cell.id = `cell-${idx}`;
                 cells[idx] = cell;
                 row.appendChild(cell);
             }
@@ -33,8 +33,8 @@ var createView = ((game, $table) => {
     };
 
     // update all table cells to match the game state
-    var update = () => {
-        for (var idx=0; idx<game.numCells; idx++) {
+    const update = () => {
+        for (let idx=0; idx<game.numCells; idx++) {
             updateCell(idx);
         }
 
@@ -45,7 +45,7 @@ var createView = ((game, $table) => {
     };
 
     var updateCell = idx => {
-        var $cell = $(cells[idx]);
+        const $cell = $(cells[idx]);
         $cell.removeClass();
 
         if (game.isRevealed(idx)) {
@@ -65,7 +65,7 @@ var createView = ((game, $table) => {
         } else if (game.isOver() && game.isMine(idx)) {
             $cell.addClass('mine');
         } else if (game.isRevealed(idx)) {
-            var count = game.mineCount(idx);
+            const count = game.mineCount(idx);
             $cell.html(count === 0 ? ' ' : count);
         }
     };

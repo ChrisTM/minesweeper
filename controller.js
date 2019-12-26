@@ -1,16 +1,16 @@
 $(document).ready(() => {
-    var settings = { 'small':  [ 8,  8, 10]
+    const settings = { 'small':  [ 8,  8, 10]
                    , 'medium': [16, 16, 40]
                    , 'large':  [32, 16, 80]
                    };
-    var game;
-    var view;
-    var depressedCells = [];
+    let game;
+    let view;
+    let depressedCells = [];
     // keypresses go into the buffer. We check for when it equals the cheat word.
-    var cheating = false;
+    let cheating = false;
 
     function newGame() {
-        var setting = settings[$('#setting').val()];
+        const setting = settings[$('#setting').val()];
         game = createGame.apply(this, setting);
         view = createView(game, $('table'));
         view.init();
@@ -39,10 +39,10 @@ $(document).ready(() => {
         if (! game.isOver()) {
             depressedCells = [e.target];
             if (e.which === 2) { // MMB
-                var neighborIdxs = game.neighbors(tdToIdx(e.target));
+                const neighborIdxs = game.neighbors(tdToIdx(e.target));
                 neighborIdxs.forEach(idx => {
                     depressedCells.push(
-                        document.getElementById('cell-' + idx)
+                        document.getElementById(`cell-${idx}`)
                     );
                 });
 
@@ -52,7 +52,7 @@ $(document).ready(() => {
     });
 
     $('table').on('mouseup', 'td', e => {
-        var idx = tdToIdx(e.target);
+        const idx = tdToIdx(e.target);
         // check if mouse is released on same field mouse was pressed
         if (e.target === depressedCells[0]) {
             switch (e.which) {
@@ -108,13 +108,13 @@ $(document).ready(() => {
     });
 
     /* turn on cheating when the user types 'xyzzy' */
-    var cheatWord = [88, 89, 90, 90, 89]; // xyzzy
-    var cheatBuffer = new Array(cheatWord.length);
+    const cheatWord = [88, 89, 90, 90, 89]; // xyzzy
+    const cheatBuffer = new Array(cheatWord.length);
     $(document).on('keydown', e => {
         cheatBuffer.push(e.which);
         cheatBuffer.shift();
 
-        for (var i = 0; i < cheatBuffer.length; i++) {
+        for (let i = 0; i < cheatBuffer.length; i++) {
             if (cheatBuffer[i] !== cheatWord[i]) {
                 return; // happens when cheat code failed
             }
