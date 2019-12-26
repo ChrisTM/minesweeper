@@ -2,50 +2,53 @@
 <html lang="en">
 
 <head>
-    <meta charset="utf-8">
-    <title>Minesweeper</title>
-    <meta name="author" content="Chris Mitchell">
-    <link rel=stylesheet href=style.css>
-    <link rel=icon href=icons/favicon.gif>
-    <script src=http://ajax.googleapis.com/ajax/libs/jquery/1.7.2/jquery.min.js></script>
-    <script src=model.js></script>
-    <script src=view.js></script>
-    <script src=controller.js></script>
+  <meta charset="utf-8">
+  <title>Minesweeper</title>
+  <meta name="author" content="Chris Mitchell">
+  <link rel=stylesheet href=style.css>
+  <link rel=icon href=icons/favicon.gif>
+  <script src=http://ajax.googleapis.com/ajax/libs/jquery/1.7.2/jquery.min.js></script>
+  <script src="model.js"></script>
+  <script src=view.js></script>
+  <script src=controller.js></script>
 
-    <script>
-        var _gaq = _gaq || [];
-        _gaq.push(['_setAccount', 'UA-22135814-1']);
-        _gaq.push(['_trackPageview']);
+  <script>
+    var _gaq = _gaq || [];
+    _gaq.push(['_setAccount', 'UA-22135814-1']);
+    _gaq.push(['_trackPageview']);
 
-        (function() {
-             var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
-             ga.src = 'http://www.google-analytics.com/ga.js';
-             var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
-         })();
-    </script>
+    (function () {
+      var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
+      ga.src = 'http://www.google-analytics.com/ga.js';
+      var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
+    })();
+  </script>
 </head>
 
 <body>
-    <div id=cheat-pixel></div>
+  <div id=cheat-pixel></div>
 
-    <div id=header>
-        <h1 id=lose>You Lose</h1>
-        <h1 id=title>Minesweeper</h1>
-        <h1 id=win>You Win!</h1>
-    </div>
+  <div id=header>
+    <h1 id=lose>You Lose</h1>
+    <h1 id=title>Minesweeper</h1>
+    <h1 id=win>You Win!</h1>
+  </div>
 
-    <label>Game Size: <select id=setting required>
-        <option value=small>Small</option>
-        <option value=medium>Medium</option>
-        <option value=large>Large</option>
+  <label>Game Size: <select id=setting required>
+      <option value=small>Small</option>
+      <option value=medium>Medium</option>
+      <option value=large>Large</option>
     </select> </label>
-    <button type=button id=new-game>New Game</button>
+  <button type=button id=new-game>New Game</button>
 
-    <table id=board>
-    </table>
+  <table id=board>
+  </table>
 
-    <p>Goal: Uncover all mine-free cells by clicking on them. You lose the game if you uncover a mine!</p>
-    <p>A numbered cell tells you how many mines are located in the eight neighboring cells. If you suspect a cell has a mine, you can right-click on it to add a flag.</p>
+  <p>Goal: Uncover all mine-free cells by clicking on them. You lose the game if
+    you uncover a mine!</p>
+  <p>A numbered cell tells you how many mines are located in the eight
+    neighboring cells. If you suspect a cell has a mine, you can right-click on
+    it to add a flag.</p>
 </body>
 
 </html>
