@@ -3,33 +3,29 @@
  * later releases.
  */
 
-export const createView = (game, $table) => {
+export const createView = (game, table) => {
   const cells = []; //a quick way to look up the DOM cell given its index
+  const header = document.querySelector('#header');
 
   // create a new table to fit the game
   const init = () => {
-    let r;
-    let c;
-    let contents;
-    let idx;
-    let row;
-    let cell;
-    contents = document.createDocumentFragment();
-    for (r = 0; r < game.height; r++) {
-      row = document.createElement('tr');
-      for (c = 0; c < game.width; c++) {
-        cell = document.createElement('td');
-        idx = r * game.width + c;
+    const contents = document.createDocumentFragment();
+    for (let r = 0; r < game.height; r++) {
+      const row = document.createElement('tr');
+      for (let c = 0; c < game.width; c++) {
+        const cell = document.createElement('td');
+        const idx = r * game.width + c;
         cell.id = `cell-${idx}`;
         cells[idx] = cell;
         row.appendChild(cell);
       }
       contents.appendChild(row);
     }
-    $table.html(contents);
+    table.innerHTML = '';
+    table.appendChild(contents);
 
     // reset the win/lose header status
-    $('#header').removeClass();
+    header.className = '';
   };
 
   // update all table cells to match the game state
@@ -39,34 +35,34 @@ export const createView = (game, $table) => {
     }
 
     if (game.isOver()) {
-      $('#header').removeClass();
-      $('#header').addClass(game.isWon() ? 'win' : 'lose');
+      header.className = '';
+      header.classList.add(game.isWon() ? 'win' : 'lose');
     }
   };
 
   var updateCell = idx => {
-    const $cell = $(cells[idx]);
-    $cell.removeClass();
+    const cell = cells[idx];
+    cell.className = '';
 
     if (game.isRevealed(idx)) {
-      $cell.addClass('open');
+      cell.classList.add('open');
     } else {
-      $cell.addClass('closed');
+      cell.classList.add('closed');
     }
 
     if (game.getExplodedIdx() === idx) {
-      $cell.addClass('explosion');
+      cell.classList.add('explosion');
     } else if (game.isFlagged(idx)) {
       if (game.isOver()) {
-        $cell.addClass(game.isMine(idx) ? 'goodflag' : 'badflag');
+        cell.classList.add(game.isMine(idx) ? 'goodflag' : 'badflag');
       } else {
-        $cell.addClass('flag');
+        cell.classList.add('flag');
       }
     } else if (game.isOver() && game.isMine(idx)) {
-      $cell.addClass('mine');
+      cell.classList.add('mine');
     } else if (game.isRevealed(idx)) {
       const count = game.mineCount(idx);
-      $cell.html(count === 0 ? ' ' : count);
+      cell.innerHTML = count === 0 ? ' ' : count;
     }
   };
 

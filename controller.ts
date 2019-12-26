@@ -22,7 +22,7 @@ document.addEventListener('DOMContentLoaded', () => {
     const settingEl: HTMLSelectElement = document.querySelector('#setting');
     const setting = settings[settingEl.value];
     game = createGame.apply(this, setting);
-    view = createView(game, $('table'));
+    view = createView(game, table);
     view.init();
     view.update();
   }
