@@ -1,6 +1,4 @@
-'use strict';
-
-var createGame = function (width, height, numMines) {
+var createGame = (width, height, numMines) => {
     var idx;
     var numCells = width * height;
     var isMine = [];
@@ -22,7 +20,7 @@ var createGame = function (width, height, numMines) {
     }
 
     /* Place mines on the board and calculate the neighboring mine counts. */
-    var placeMines = function (avoidIdx) {
+    var placeMines = avoidIdx => {
         // Mines are placed with some friendliness; there is a mine-free zone
         // under and around the user's first click.
         //
@@ -56,13 +54,13 @@ var createGame = function (width, height, numMines) {
         }
 
         // add the neighbor counts
-        var isMineFn = function (idx) { return isMine[idx]; };
+        var isMineFn = idx => isMine[idx];
         for (idx = 0; idx < numCells; idx++) {
             mineCount[idx] = neighbors(idx).filter(isMineFn).length;
         }
     };
 
-    var clear = function (idx) {
+    var clear = idx => {
         if (isFlagged[idx] || isOver) {
             return;
         }
@@ -83,14 +81,12 @@ var createGame = function (width, height, numMines) {
         }
     };
 
-    var surroundClear = function (idx) {
+    var surroundClear = idx => {
         if (isRevealed[idx]) {
             // go ahead if the user has flagged the right amount of surrounding
             // mines
             var neighIdxs = neighbors(idx);
-            var flagCount = neighIdxs.filter(function (idx) {
-                return isFlagged[idx];
-            }).length;
+            var flagCount = neighIdxs.filter(idx => isFlagged[idx]).length;
 
             if (flagCount === mineCount[idx]) {
                 neighIdxs.forEach(clear);
@@ -98,7 +94,7 @@ var createGame = function (width, height, numMines) {
         }
     };
 
-    var recursiveClear = function (idx) {
+    var recursiveClear = idx => {
         if (isRevealed[idx]) {
             return;
         }
@@ -111,14 +107,12 @@ var createGame = function (width, height, numMines) {
 
     };
 
-    var isWin = function () {
-        var numRevealed = indices.filter(function (idx) {
-            return (isRevealed[idx]);
-        }).length;
+    var isWin = () => {
+        var numRevealed = indices.filter(idx => isRevealed[idx]).length;
         return (numRevealed + numMines === numCells);
     };
 
-    var end = function (idx) {
+    var end = idx => {
         if (isOver) {
             return;
         }
@@ -128,7 +122,7 @@ var createGame = function (width, height, numMines) {
         isWon = isWin();
     };
 
-    var toggleFlag = function (idx) {
+    var toggleFlag = idx => {
         if (isOver || isRevealed[idx]) {
             return;
         }
@@ -136,8 +130,13 @@ var createGame = function (width, height, numMines) {
     };
 
     // return list of cell's neighbors
-    var neighbors = function (idx) {
-        var r, c, newR, newC, neighbors, offsets;
+    var neighbors = idx => {
+        var r;
+        var c;
+        var newR;
+        var newC;
+        var neighbors;
+        var offsets;
         r = Math.floor(idx / width);
         c = idx % width;
         offsets = [ [-1,-1], [ 0,-1], [ 1,-1]

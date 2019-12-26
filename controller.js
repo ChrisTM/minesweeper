@@ -1,11 +1,10 @@
-'use strict';
-
-$(document).ready(function () {
+$(document).ready(() => {
     var settings = { 'small':  [ 8,  8, 10]
                    , 'medium': [16, 16, 40]
                    , 'large':  [32, 16, 80]
                    };
-    var game, view;
+    var game;
+    var view;
     var depressedCells = [];
     // keypresses go into the buffer. We check for when it equals the cheat word.
     var cheating = false;
@@ -22,13 +21,13 @@ $(document).ready(function () {
         return parseInt(cell.id.slice('cell-'.length));
     }
 
-    $('#new-game').on('click', function (e) {
+    $('#new-game').on('click', e => {
         newGame();
     });
 
     // right-clicking on the cell borders would trigger context menu -- an annoying
     // behavior that we disable here
-    $('table').on('contextmenu', function (e) {
+    $('table').on('contextmenu', e => {
         e.preventDefault();
     });
 
@@ -36,12 +35,12 @@ $(document).ready(function () {
     // because we also want to set and remove the 'depressed' class so that the
     // fields consistently behave (both in effect and visually) like desktop
     // GUI buttons.
-    $('table').on('mousedown', 'td', function (e) {
+    $('table').on('mousedown', 'td', e => {
         if (! game.isOver()) {
             depressedCells = [e.target];
             if (e.which === 2) { // MMB
                 var neighborIdxs = game.neighbors(tdToIdx(e.target));
-                neighborIdxs.forEach(function (idx) {
+                neighborIdxs.forEach(idx => {
                     depressedCells.push(
                         document.getElementById('cell-' + idx)
                     );
@@ -52,7 +51,7 @@ $(document).ready(function () {
         }
     });
 
-    $('table').on('mouseup', 'td', function (e) {
+    $('table').on('mouseup', 'td', e => {
         var idx = tdToIdx(e.target);
         // check if mouse is released on same field mouse was pressed
         if (e.target === depressedCells[0]) {
@@ -74,20 +73,20 @@ $(document).ready(function () {
         depressedCells = [];
     });
 
-    $(document).on('mouseup', function (e) {
+    $(document).on('mouseup', e => {
         $(depressedCells).removeClass('depressed');
         depressedCells = [];
     });
 
 
-    $('table').on('mouseout', 'td', function (e) {
+    $('table').on('mouseout', 'td', e => {
         if (e.target === depressedCells[0]) {
             $(depressedCells).removeClass('depressed');
         }
         $('#cheat-pixel').hide();
     });
 
-    $('table').on('mouseenter', 'td', function (e) {
+    $('table').on('mouseenter', 'td', e => {
         if (e.target === depressedCells[0]) {
             $(depressedCells).addClass('depressed');
         }
@@ -104,14 +103,14 @@ $(document).ready(function () {
     // clicking and dragging in the right spot of a cell will cause a drag
     // event, preventing the mouseup from firing, causing depressedCells not to
     // clear. We prevent the drag so that this doesn't happen.
-    $('table').on('dragstart', function (e) {
+    $('table').on('dragstart', e => {
         e.preventDefault();
     });
 
     /* turn on cheating when the user types 'xyzzy' */
     var cheatWord = [88, 89, 90, 90, 89]; // xyzzy
     var cheatBuffer = new Array(cheatWord.length);
-    $(document).on('keydown', function (e) {
+    $(document).on('keydown', e => {
         cheatBuffer.push(e.which);
         cheatBuffer.shift();
 

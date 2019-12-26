@@ -1,15 +1,19 @@
-'use strict';
 /* The view-controller separation isn't too hot in this version of the program.
  * The controller has some view-code directly in it. I may clean that up in
  * later releases.
  */
 
-var createView = (function (game, $table) {
+var createView = ((game, $table) => {
     var cells = []; //a quick way to look up the DOM cell given its index
 
     // create a new table to fit the game
-    var init = function () {
-        var r, c, contents, idx, row, cell;
+    var init = () => {
+        var r;
+        var c;
+        var contents;
+        var idx;
+        var row;
+        var cell;
         contents = document.createDocumentFragment();
         for (r=0; r<game.height; r++) {
             row = document.createElement('tr');
@@ -29,7 +33,7 @@ var createView = (function (game, $table) {
     };
 
     // update all table cells to match the game state
-    var update = function () {
+    var update = () => {
         for (var idx=0; idx<game.numCells; idx++) {
             updateCell(idx);
         }
@@ -40,7 +44,7 @@ var createView = (function (game, $table) {
         }
     };
 
-    var updateCell = function (idx) {
+    var updateCell = idx => {
         var $cell = $(cells[idx]);
         $cell.removeClass();
 
@@ -66,7 +70,7 @@ var createView = (function (game, $table) {
         }
     };
 
-    return { init: init
-           , update: update
+    return { init
+           , update
            };
 });
