@@ -1,4 +1,4 @@
-const createGame = (width, height, numMines) => {
+export const createGame = (width, height, numMines) => {
   let idx;
   const numCells = width * height;
   const isMine = [];

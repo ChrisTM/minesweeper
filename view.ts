@@ -3,7 +3,7 @@
  * later releases.
  */
 
-const createView = (game, $table) => {
+export const createView = (game, $table) => {
   const cells = []; //a quick way to look up the DOM cell given its index
 
   // create a new table to fit the game

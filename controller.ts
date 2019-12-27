@@ -1,3 +1,6 @@
+import { createGame } from './model';
+import { createView } from './view';
+
 $(document).ready(() => {
   const settings = {
     small: [8, 8, 10],
