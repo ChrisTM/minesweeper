@@ -11,6 +11,7 @@ document.addEventListener('DOMContentLoaded', () => {
   const table = document.querySelector('table')!;
   const title = document.querySelector('#title') as HTMLElement;
   const cheatPixel = document.querySelector('#cheat-pixel') as HTMLElement;
+  const settingSelect = document.querySelector('#setting') as HTMLSelectElement;
   const newGameButton = document.querySelector(
     '#new-game',
   ) as HTMLButtonElement;
@@ -22,8 +23,7 @@ document.addEventListener('DOMContentLoaded', () => {
   let cheating = false;
 
   function newGame() {
-    const settingEl = document.querySelector('#setting') as HTMLSelectElement;
-    const setting = settings[settingEl.value];
+    const setting = settings[settingSelect.value];
     game = new Game(...setting);
     view = new View(game, table);
     view.init();

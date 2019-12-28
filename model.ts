@@ -1,25 +1,22 @@
 export class Game {
-  indices: number[] = [];
-  isFlagged: boolean[] = [];
+  numCells: number;
   isMine: boolean[] = [];
+  isFlagged: boolean[] = [];
   isRevealed: boolean[] = [];
   mineCount: number[] = [];
-
-  numCells: number;
-
-  explodedIdx: number | undefined;
-  isOver = false;
-  minesArePlaced = false;
   isWon = false;
+  isOver = false;
+  explodedIdx: number | undefined;
+
+  private minesArePlaced = false;
 
   constructor(
     public width: number,
     public height: number,
-    public numMines: number,
+    private numMines: number,
   ) {
     this.numCells = width * height;
     for (let idx = 0; idx < this.numCells; idx++) {
-      this.indices[idx] = idx;
       this.isFlagged[idx] = false;
       this.isMine[idx] = false;
       this.isRevealed[idx] = false;
@@ -105,7 +102,7 @@ export class Game {
     }
   }
 
-  recursiveClear(idx: number) {
+  private recursiveClear(idx: number) {
     if (this.isRevealed[idx]) {
       return;
     }
@@ -119,12 +116,12 @@ export class Game {
     }
   }
 
-  isWin() {
-    const numRevealed = this.indices.filter(idx => this.isRevealed[idx]).length;
+  private isWin() {
+    const numRevealed = this.isRevealed.filter(revealed => revealed).length;
     return numRevealed + this.numMines === this.numCells;
   }
 
-  end(idx: number | undefined) {
+  private end(idx: number | undefined) {
     if (this.isOver) {
       return;
     }
