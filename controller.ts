@@ -38,8 +38,8 @@ document.addEventListener('DOMContentLoaded', () => {
     newGame();
   });
 
-  // right-clicking on the cell borders would trigger context menu -- an annoying
-  // behavior that we disable here
+  // right-clicking on the cell borders would trigger context menu -- an
+  // annoying behavior that we disable here
   table.addEventListener('contextmenu', e => {
     e.preventDefault();
   });

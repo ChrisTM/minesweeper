@@ -143,27 +143,22 @@ export class Game {
 
   // return list of cell's neighbors
   neighbors(idx: number) {
-    let r: number;
-    let c: number;
-    let newR: number;
-    let newC: number;
-    let neighbors: number[];
-    r = Math.floor(idx / this.width);
-    c = idx % this.width;
+    const neighbors: number[] = [];
+    const r = Math.floor(idx / this.width);
+    const c = idx % this.width;
     const offsets = [
       [-1, -1],
-      [0, -1],
-      [1, -1],
       [-1, 0],
-      [1, 0],
       [-1, 1],
+      [0, -1],
       [0, 1],
+      [1, -1],
+      [1, 0],
       [1, 1],
     ];
-    neighbors = [];
     for (const [rOffset, cOffset] of offsets) {
-      newR = r + rOffset;
-      newC = c + cOffset;
+      const newR = r + rOffset;
+      const newC = c + cOffset;
       if (0 <= newC && newC < this.width && 0 <= newR && newR < this.height) {
         neighbors.push(newR * this.width + newC);
       }

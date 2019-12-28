@@ -6,7 +6,8 @@ import { Game } from './model';
  */
 
 export class View {
-  private cells: HTMLElement[] = []; // a quick way to look up the DOM cell given its index
+  // a quick way to look up the DOM cell given its index
+  private cells: HTMLElement[] = [];
   private header = document.querySelector('#header')!;
 
   constructor(private game: Game, private table: HTMLTableElement) {}
