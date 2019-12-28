@@ -46,6 +46,7 @@ document.addEventListener('DOMContentLoaded', () => {
   // fields consistently behave (both in effect and visually) like desktop
   // GUI buttons.
   table.addEventListener('mousedown', e => {
+    e.preventDefault();
     const target = e.target as HTMLElement;
     const innerEl = target.closest('td');
     if (!innerEl || !(e.currentTarget as Element).contains(innerEl)) {
@@ -67,6 +68,7 @@ document.addEventListener('DOMContentLoaded', () => {
   });
 
   table.addEventListener('mouseup', e => {
+    e.preventDefault();
     const target = e.target as HTMLElement;
     const innerEl = target.closest('td');
     if (!innerEl || !(e.currentTarget as Element).contains(innerEl)) {
