@@ -113,7 +113,7 @@ document.addEventListener('DOMContentLoaded', () => {
     cheatPixel.style.display = 'none';
   });
 
-  table.addEventListener('mouseenter', e => {
+  table.addEventListener('mouseover', e => {
     const target = e.target as HTMLElement;
     const innerEl = (target as Element).closest('td');
     if (!innerEl || !(e.currentTarget as Element).contains(innerEl)) {
@@ -124,11 +124,8 @@ document.addEventListener('DOMContentLoaded', () => {
     }
 
     if (cheating) {
-      if (game.isMine[tdToIdx(target)]) {
-        cheatPixel.style.display = 'block';
-      } else {
-        cheatPixel.style.display = 'none';
-      }
+      const isMine = game.isMine[tdToIdx(target)];
+      cheatPixel.style.display = isMine ? 'block' : 'none';
     }
   });
 
