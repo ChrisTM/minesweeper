@@ -1,11 +1,16 @@
+import { createGame } from './model';
+
 /* The view-controller separation isn't too hot in this version of the program.
  * The controller has some view-code directly in it. I may clean that up in
  * later releases.
  */
 
-export function createView(game, table) {
-  const cells = []; //a quick way to look up the DOM cell given its index
-  const header = document.querySelector('#header');
+export function createView(
+  game: ReturnType<typeof createGame>,
+  table: HTMLTableElement
+) {
+  const cells: HTMLElement[] = []; //a quick way to look up the DOM cell given its index
+  const header = document.querySelector('#header')!;
 
   // create a new table to fit the game
   function init() {
@@ -62,7 +67,7 @@ export function createView(game, table) {
       cell.classList.add('mine');
     } else if (game.isRevealed(idx)) {
       const count = game.mineCount(idx);
-      cell.innerHTML = count === 0 ? ' ' : count;
+      cell.innerHTML = count === 0 ? ' ' : count.toString();
     }
   }
 

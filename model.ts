@@ -1,23 +1,24 @@
 export function createGame(width: number, height: number, numMines: number) {
-  let idx: number;
   const numCells = width * height;
-  const isMine = [];
-  const isFlagged = [];
-  const isRevealed = [];
-  const mineCount = [];
-  const indices = [];
+
+  const indices: number[] = [];
+  const isFlagged: boolean[] = [];
+  const isMine: boolean[] = [];
+  const isRevealed: boolean[] = [];
+  const mineCount: number[] = [];
+
+  for (let idx = 0; idx < numCells; idx++) {
+    indices[idx] = idx;
+    isFlagged[idx] = false;
+    isMine[idx] = false;
+    isRevealed[idx] = false;
+    mineCount[idx] = 0;
+  }
+
   let explodedIdx: number | undefined;
   let isOver = false;
   let minesArePlaced = false;
   let isWon = false;
-
-  for (idx = 0; idx < numCells; idx++) {
-    isMine[idx] = false;
-    isFlagged[idx] = false;
-    isRevealed[idx] = false;
-    indices[idx] = idx;
-    mineCount[idx] = 0;
-  }
 
   /* Place mines on the board and calculate the neighboring mine counts. */
   function placeMines(avoidIdx: number) {
@@ -112,7 +113,7 @@ export function createGame(width: number, height: number, numMines: number) {
     return numRevealed + numMines === numCells;
   }
 
-  function end(idx: number) {
+  function end(idx: number | undefined) {
     if (isOver) {
       return;
     }

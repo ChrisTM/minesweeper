@@ -1,33 +1,36 @@
 import { createGame } from './model';
 import { createView } from './view';
 
-document.addEventListener('DOMContentLoaded', () => {
-  const table = document.querySelector('table');
-  const title: HTMLElement = document.querySelector('#title');
-  const cheatPixel: HTMLElement = document.querySelector('#cheat-pixel');
-  const newGameButton = document.querySelector('#new-game');
+const settings: { [key: string]: [number, number, number] } = {
+  small: [8, 8, 10],
+  medium: [16, 16, 40],
+  large: [32, 16, 80],
+};
 
-  const settings = {
-    small: [8, 8, 10],
-    medium: [16, 16, 40],
-    large: [32, 16, 80],
-  };
-  let game;
-  let view;
-  let depressedCells = [];
+document.addEventListener('DOMContentLoaded', () => {
+  const table = document.querySelector('table')!;
+  const title = document.querySelector('#title') as HTMLElement;
+  const cheatPixel = document.querySelector('#cheat-pixel') as HTMLElement;
+  const newGameButton = document.querySelector(
+    '#new-game'
+  ) as HTMLButtonElement;
+
+  let game: ReturnType<typeof createGame>;
+  let view: ReturnType<typeof createView>;
+  let depressedCells: HTMLElement[] = [];
   // keypresses go into the buffer. We check for when it equals the cheat word.
   let cheating = false;
 
   function newGame() {
-    const settingEl: HTMLSelectElement = document.querySelector('#setting');
+    const settingEl = document.querySelector('#setting') as HTMLSelectElement;
     const setting = settings[settingEl.value];
-    game = createGame.apply(this, setting);
+    game = createGame(...setting);
     view = createView(game, table);
     view.init();
     view.update();
   }
 
-  function tdToIdx(cell) {
+  function tdToIdx(cell: HTMLElement) {
     return parseInt(cell.id.slice('cell-'.length));
   }
 
@@ -46,15 +49,16 @@ document.addEventListener('DOMContentLoaded', () => {
   // fields consistently behave (both in effect and visually) like desktop
   // GUI buttons.
   table.addEventListener('mousedown', e => {
-    const innerEl = (e.target as Element).closest('td');
+    const target = e.target as HTMLElement;
+    const innerEl = target.closest('td');
     if (!innerEl || !(e.currentTarget as Element).contains(innerEl)) return;
     if (!game.isOver()) {
-      depressedCells = [e.target];
+      depressedCells = [target];
       if (e.which === 2) {
         // MMB
-        const neighborIdxs = game.neighbors(tdToIdx(e.target));
+        const neighborIdxs = game.neighbors(tdToIdx(target));
         neighborIdxs.forEach(idx => {
-          depressedCells.push(document.getElementById(`cell-${idx}`));
+          depressedCells.push(document.getElementById(`cell-${idx}`)!);
         });
       }
       for (let cell of depressedCells) {
@@ -64,11 +68,12 @@ document.addEventListener('DOMContentLoaded', () => {
   });
 
   table.addEventListener('mouseup', e => {
-    const innerEl = (e.target as Element).closest('td');
+    const target = e.target as HTMLElement;
+    const innerEl = target.closest('td');
     if (!innerEl || !(e.currentTarget as Element).contains(innerEl)) return;
-    const idx = tdToIdx(e.target);
+    const idx = tdToIdx(target);
     // check if mouse is released on same field mouse was pressed
-    if (e.target === depressedCells[0]) {
+    if (target === depressedCells[0]) {
       switch (e.which) {
         case 1: // LMB clears a mine
           game.clear(idx);
