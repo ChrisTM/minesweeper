@@ -1,15 +1,15 @@
-export const createGame = (width, height, numMines) => {
-  let idx;
+export const createGame = (width: number, height: number, numMines: number) => {
+  let idx: number;
   const numCells = width * height;
   const isMine = [];
   const isFlagged = [];
   const isRevealed = [];
   const mineCount = [];
   const indices = [];
-  let explodedIdx;
+  let explodedIdx: number | undefined;
   let isOver = false;
   let minesArePlaced = false;
-  let isWon;
+  let isWon = false;
 
   for (idx = 0; idx < numCells; idx++) {
     isMine[idx] = false;
@@ -20,7 +20,7 @@ export const createGame = (width, height, numMines) => {
   }
 
   /* Place mines on the board and calculate the neighboring mine counts. */
-  const placeMines = avoidIdx => {
+  function placeMines(avoidIdx: number) {
     // Mines are placed with some friendliness; there is a mine-free zone
     // under and around the user's first click.
     //
@@ -28,7 +28,7 @@ export const createGame = (width, height, numMines) => {
     // last few (saving space equal to the size of the mine-free zone).  We
     // then place any mines that are in the mine-free zone in the empty
     // spaces we left during the shuffle.
-    let idx;
+    let idx: number;
 
     // figure out which fields to avoid
     const avoidIdxs = [avoidIdx].concat(neighbors(avoidIdx));
@@ -54,13 +54,13 @@ export const createGame = (width, height, numMines) => {
     }
 
     // add the neighbor counts
-    const isMineFn = idx => isMine[idx];
+    const isMineFn = (idx: number) => isMine[idx];
     for (idx = 0; idx < numCells; idx++) {
       mineCount[idx] = neighbors(idx).filter(isMineFn).length;
     }
-  };
+  }
 
-  const clear = idx => {
+  const clear = (idx: number) => {
     if (isFlagged[idx] || isOver) {
       return;
     }
@@ -77,16 +77,17 @@ export const createGame = (width, height, numMines) => {
     }
 
     if (isWin()) {
-      end();
+      end(undefined);
     }
   };
 
-  const surroundClear = idx => {
+  const surroundClear = (idx: number) => {
     if (isRevealed[idx]) {
       // go ahead if the user has flagged the right amount of surrounding
       // mines
       const neighIdxs = neighbors(idx);
-      const flagCount = neighIdxs.filter(idx => isFlagged[idx]).length;
+      const flagCount = neighIdxs.filter((idx: number) => isFlagged[idx])
+        .length;
 
       if (flagCount === mineCount[idx]) {
         neighIdxs.forEach(clear);
@@ -94,7 +95,7 @@ export const createGame = (width, height, numMines) => {
     }
   };
 
-  var recursiveClear = idx => {
+  var recursiveClear = (idx: number) => {
     if (isRevealed[idx]) {
       return;
     }
@@ -111,7 +112,7 @@ export const createGame = (width, height, numMines) => {
     return numRevealed + numMines === numCells;
   };
 
-  var end = idx => {
+  var end = (idx: number) => {
     if (isOver) {
       return;
     }
@@ -121,7 +122,7 @@ export const createGame = (width, height, numMines) => {
     isWon = isWin();
   };
 
-  const toggleFlag = idx => {
+  const toggleFlag = (idx: number) => {
     if (isOver || isRevealed[idx]) {
       return;
     }
@@ -129,16 +130,15 @@ export const createGame = (width, height, numMines) => {
   };
 
   // return list of cell's neighbors
-  var neighbors = idx => {
-    let r;
-    let c;
-    let newR;
-    let newC;
-    let neighbors;
-    let offsets;
+  var neighbors = (idx: number) => {
+    let r: number;
+    let c: number;
+    let newR: number;
+    let newC: number;
+    let neighbors: number[];
     r = Math.floor(idx / width);
     c = idx % width;
-    offsets = [
+    let offsets = [
       [-1, -1],
       [0, -1],
       [1, -1],
@@ -176,19 +176,19 @@ export const createGame = (width, height, numMines) => {
     isOver() {
       return isOver;
     },
-    isMine(idx) {
+    isMine(idx: number) {
       return isMine[idx];
     },
-    isRevealed(idx) {
+    isRevealed(idx: number) {
       return isRevealed[idx];
     },
-    isFlagged(idx) {
+    isFlagged(idx: number) {
       return isFlagged[idx];
     },
-    mineCount(idx) {
+    mineCount(idx: number) {
       return mineCount[idx];
     },
-    isWon(idx) {
+    isWon() {
       return isWon;
     },
   };
