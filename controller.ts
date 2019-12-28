@@ -57,7 +57,9 @@ document.addEventListener('DOMContentLoaded', () => {
           depressedCells.push(document.getElementById(`cell-${idx}`));
         });
       }
-      $(depressedCells).addClass('depressed');
+      for (let cell of depressedCells) {
+        cell.classList.add('depressed');
+      }
     }
   });
 
@@ -81,12 +83,16 @@ document.addEventListener('DOMContentLoaded', () => {
       }
       view.update();
     }
-    $(depressedCells).removeClass('depressed');
+    for (let cell of depressedCells) {
+      cell.classList.remove('depressed');
+    }
     depressedCells = [];
   });
 
   document.addEventListener('mouseup', e => {
-    $(depressedCells).removeClass('depressed');
+    for (let cell of depressedCells) {
+      cell.classList.remove('depressed');
+    }
     depressedCells = [];
   });
 
