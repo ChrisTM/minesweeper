@@ -1,5 +1,5 @@
 import { Game } from './model';
-import { createView } from './view';
+import { View } from './view';
 
 const settings: { [key: string]: [number, number, number] } = {
   small: [8, 8, 10],
@@ -16,7 +16,7 @@ document.addEventListener('DOMContentLoaded', () => {
   ) as HTMLButtonElement;
 
   let game: Game;
-  let view: ReturnType<typeof createView>;
+  let view: View;
   let depressedCells: HTMLElement[] = [];
   // keypresses go into the buffer. We check for when it equals the cheat word.
   let cheating = false;
@@ -25,7 +25,7 @@ document.addEventListener('DOMContentLoaded', () => {
     const settingEl = document.querySelector('#setting') as HTMLSelectElement;
     const setting = settings[settingEl.value];
     game = new Game(...setting);
-    view = createView(game, table);
+    view = new View(game, table);
     view.init();
     view.update();
   }

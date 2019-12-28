@@ -5,68 +5,68 @@ import { Game } from './model';
  * later releases.
  */
 
-export function createView(game: Game, table: HTMLTableElement) {
-  const cells: HTMLElement[] = []; // a quick way to look up the DOM cell given its index
-  const header = document.querySelector('#header')!;
+export class View {
+  private cells: HTMLElement[] = []; // a quick way to look up the DOM cell given its index
+  private header = document.querySelector('#header')!;
+
+  constructor(private game: Game, private table: HTMLTableElement) {}
 
   // create a new table to fit the game
-  function init() {
+  init() {
     const contents = document.createDocumentFragment();
-    for (let r = 0; r < game.height; r++) {
+    for (let r = 0; r < this.game.height; r++) {
       const row = document.createElement('tr');
-      for (let c = 0; c < game.width; c++) {
+      for (let c = 0; c < this.game.width; c++) {
         const cell = document.createElement('td');
-        const idx = r * game.width + c;
+        const idx = r * this.game.width + c;
         cell.id = `cell-${idx}`;
-        cells[idx] = cell;
+        this.cells[idx] = cell;
         row.appendChild(cell);
       }
       contents.appendChild(row);
     }
-    table.innerHTML = '';
-    table.appendChild(contents);
+    this.table.innerHTML = '';
+    this.table.appendChild(contents);
 
     // reset the win/lose header status
-    header.className = '';
+    this.header.className = '';
   }
 
   // update all table cells to match the game state
-  function update() {
-    for (let idx = 0; idx < game.numCells; idx++) {
-      updateCell(idx);
+  update() {
+    for (let idx = 0; idx < this.game.numCells; idx++) {
+      this.updateCell(idx);
     }
 
-    if (game.isOver) {
-      header.className = '';
-      header.classList.add(game.isWon ? 'win' : 'lose');
+    if (this.game.isOver) {
+      this.header.className = '';
+      this.header.classList.add(this.game.isWon ? 'win' : 'lose');
     }
   }
 
-  function updateCell(idx: number) {
-    const cell = cells[idx];
+  private updateCell(idx: number) {
+    const cell = this.cells[idx];
     cell.className = '';
 
-    if (game.isRevealed[idx]) {
+    if (this.game.isRevealed[idx]) {
       cell.classList.add('open');
     } else {
       cell.classList.add('closed');
     }
 
-    if (game.explodedIdx === idx) {
+    if (this.game.explodedIdx === idx) {
       cell.classList.add('explosion');
-    } else if (game.isFlagged[idx]) {
-      if (game.isOver) {
-        cell.classList.add(game.isMine[idx] ? 'goodflag' : 'badflag');
+    } else if (this.game.isFlagged[idx]) {
+      if (this.game.isOver) {
+        cell.classList.add(this.game.isMine[idx] ? 'goodflag' : 'badflag');
       } else {
         cell.classList.add('flag');
       }
-    } else if (game.isOver && game.isMine[idx]) {
+    } else if (this.game.isOver && this.game.isMine[idx]) {
       cell.classList.add('mine');
-    } else if (game.isRevealed[idx]) {
-      const count = game.mineCount[idx];
+    } else if (this.game.isRevealed[idx]) {
+      const count = this.game.mineCount[idx];
       cell.innerHTML = count === 0 ? ' ' : count.toString();
     }
   }
-
-  return { init, update };
 }
