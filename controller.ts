@@ -12,7 +12,7 @@ document.addEventListener('DOMContentLoaded', () => {
   const title = document.querySelector('#title') as HTMLElement;
   const cheatPixel = document.querySelector('#cheat-pixel') as HTMLElement;
   const newGameButton = document.querySelector(
-    '#new-game'
+    '#new-game',
   ) as HTMLButtonElement;
 
   let game: Game;
@@ -31,7 +31,7 @@ document.addEventListener('DOMContentLoaded', () => {
   }
 
   function tdToIdx(cell: HTMLElement) {
-    return parseInt(cell.id.slice('cell-'.length));
+    return parseInt(cell.id.slice('cell-'.length), 10);
   }
 
   newGameButton.addEventListener('click', e => {
@@ -51,7 +51,9 @@ document.addEventListener('DOMContentLoaded', () => {
   table.addEventListener('mousedown', e => {
     const target = e.target as HTMLElement;
     const innerEl = target.closest('td');
-    if (!innerEl || !(e.currentTarget as Element).contains(innerEl)) return;
+    if (!innerEl || !(e.currentTarget as Element).contains(innerEl)) {
+      return;
+    }
     if (!game.isOver) {
       depressedCells = [target];
       if (e.which === 2) {
@@ -61,7 +63,7 @@ document.addEventListener('DOMContentLoaded', () => {
           depressedCells.push(document.getElementById(`cell-${idx}`)!);
         }
       }
-      for (let cell of depressedCells) {
+      for (const cell of depressedCells) {
         cell.classList.add('depressed');
       }
     }
@@ -70,7 +72,9 @@ document.addEventListener('DOMContentLoaded', () => {
   table.addEventListener('mouseup', e => {
     const target = e.target as HTMLElement;
     const innerEl = target.closest('td');
-    if (!innerEl || !(e.currentTarget as Element).contains(innerEl)) return;
+    if (!innerEl || !(e.currentTarget as Element).contains(innerEl)) {
+      return;
+    }
     const idx = tdToIdx(target);
     // check if mouse is released on same field mouse was pressed
     if (target === depressedCells[0]) {
@@ -88,14 +92,14 @@ document.addEventListener('DOMContentLoaded', () => {
       }
       view.update();
     }
-    for (let cell of depressedCells) {
+    for (const cell of depressedCells) {
       cell.classList.remove('depressed');
     }
     depressedCells = [];
   });
 
   document.addEventListener('mouseup', e => {
-    for (let cell of depressedCells) {
+    for (const cell of depressedCells) {
       cell.classList.remove('depressed');
     }
     depressedCells = [];
@@ -112,7 +116,9 @@ document.addEventListener('DOMContentLoaded', () => {
   table.addEventListener('mouseenter', e => {
     const target = e.target as HTMLElement;
     const innerEl = (target as Element).closest('td');
-    if (!innerEl || !(e.currentTarget as Element).contains(innerEl)) return;
+    if (!innerEl || !(e.currentTarget as Element).contains(innerEl)) {
+      return;
+    }
     if (target === depressedCells[0]) {
       target.classList.remove('depressed');
     }

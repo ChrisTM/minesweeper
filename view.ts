@@ -6,7 +6,7 @@ import { Game } from './model';
  */
 
 export function createView(game: Game, table: HTMLTableElement) {
-  const cells: HTMLElement[] = []; //a quick way to look up the DOM cell given its index
+  const cells: HTMLElement[] = []; // a quick way to look up the DOM cell given its index
   const header = document.querySelector('#header')!;
 
   // create a new table to fit the game

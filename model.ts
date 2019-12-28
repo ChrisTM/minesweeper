@@ -15,7 +15,7 @@ export class Game {
   constructor(
     public width: number,
     public height: number,
-    public numMines: number
+    public numMines: number,
   ) {
     this.numCells = width * height;
     for (let idx = 0; idx < this.numCells; idx++) {
@@ -150,7 +150,7 @@ export class Game {
     let neighbors: number[];
     r = Math.floor(idx / this.width);
     c = idx % this.width;
-    let offsets = [
+    const offsets = [
       [-1, -1],
       [0, -1],
       [1, -1],
@@ -161,9 +161,9 @@ export class Game {
       [1, 1],
     ];
     neighbors = [];
-    for (let i = 0; i < offsets.length; i++) {
-      newR = r + offsets[i][0];
-      newC = c + offsets[i][1];
+    for (const [rOffset, cOffset] of offsets) {
+      newR = r + rOffset;
+      newC = c + cOffset;
       if (0 <= newC && newC < this.width && 0 <= newR && newR < this.height) {
         neighbors.push(newR * this.width + newC);
       }
