@@ -7,7 +7,7 @@ import { Game } from './model';
 
 export class View {
   // a quick way to look up the DOM cell given its index
-  private cells: HTMLElement[] = [];
+  cells: HTMLElement[] = [];
   private header = document.querySelector('#header')!;
 
   constructor(private game: Game, table: HTMLTableElement) {
@@ -17,7 +17,7 @@ export class View {
       for (let c = 0; c < this.game.width; c++) {
         const cell = document.createElement('td');
         const idx = r * this.game.width + c;
-        cell.id = `cell-${idx}`;
+        cell.dataset.idx = idx.toString();
         this.cells[idx] = cell;
         row.appendChild(cell);
       }

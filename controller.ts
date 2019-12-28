@@ -30,7 +30,7 @@ document.addEventListener('DOMContentLoaded', () => {
   }
 
   function tdToIdx(cell: HTMLElement) {
-    return parseInt(cell.id.slice('cell-'.length), 10);
+    return parseInt(cell.dataset.idx!);
   }
 
   newGameButton.addEventListener('click', newGame);
@@ -57,7 +57,7 @@ document.addEventListener('DOMContentLoaded', () => {
         // MMB
         const neighborIdxs = game.neighbors(tdToIdx(target));
         for (const idx of neighborIdxs) {
-          depressedCells.push(document.getElementById(`cell-${idx}`)!);
+          depressedCells.push(view.cells[idx]);
         }
       }
       for (const cell of depressedCells) {
