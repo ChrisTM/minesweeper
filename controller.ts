@@ -119,8 +119,14 @@ document.addEventListener('DOMContentLoaded', () => {
     if (!innerEl || !(e.currentTarget as Element).contains(innerEl)) {
       return;
     }
-    if (target === depressedCells[0]) {
-      target.classList.remove('depressed');
+
+    const clickedCell = depressedCells[0];
+    if (clickedCell) {
+      if (clickedCell === target) {
+        target.classList.add('depressed');
+      } else {
+        target.classList.remove('depressed');
+      }
     }
 
     if (cheating) {
