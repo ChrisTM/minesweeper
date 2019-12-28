@@ -1,14 +1,11 @@
-import { createGame } from './model';
+import { Game } from './model';
 
 /* The view-controller separation isn't too hot in this version of the program.
  * The controller has some view-code directly in it. I may clean that up in
  * later releases.
  */
 
-export function createView(
-  game: ReturnType<typeof createGame>,
-  table: HTMLTableElement
-) {
+export function createView(game: Game, table: HTMLTableElement) {
   const cells: HTMLElement[] = []; //a quick way to look up the DOM cell given its index
   const header = document.querySelector('#header')!;
 
@@ -39,9 +36,9 @@ export function createView(
       updateCell(idx);
     }
 
-    if (game.isOver()) {
+    if (game.isOver) {
       header.className = '';
-      header.classList.add(game.isWon() ? 'win' : 'lose');
+      header.classList.add(game.isWon ? 'win' : 'lose');
     }
   }
 
@@ -49,24 +46,24 @@ export function createView(
     const cell = cells[idx];
     cell.className = '';
 
-    if (game.isRevealed(idx)) {
+    if (game.isRevealed[idx]) {
       cell.classList.add('open');
     } else {
       cell.classList.add('closed');
     }
 
-    if (game.getExplodedIdx() === idx) {
+    if (game.explodedIdx === idx) {
       cell.classList.add('explosion');
-    } else if (game.isFlagged(idx)) {
-      if (game.isOver()) {
-        cell.classList.add(game.isMine(idx) ? 'goodflag' : 'badflag');
+    } else if (game.isFlagged[idx]) {
+      if (game.isOver) {
+        cell.classList.add(game.isMine[idx] ? 'goodflag' : 'badflag');
       } else {
         cell.classList.add('flag');
       }
-    } else if (game.isOver() && game.isMine(idx)) {
+    } else if (game.isOver && game.isMine[idx]) {
       cell.classList.add('mine');
-    } else if (game.isRevealed(idx)) {
-      const count = game.mineCount(idx);
+    } else if (game.isRevealed[idx]) {
+      const count = game.mineCount[idx];
       cell.innerHTML = count === 0 ? ' ' : count.toString();
     }
   }

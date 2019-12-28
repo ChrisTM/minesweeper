@@ -1,4 +1,4 @@
-import { createGame } from './model';
+import { Game } from './model';
 import { createView } from './view';
 
 const settings: { [key: string]: [number, number, number] } = {
@@ -15,7 +15,7 @@ document.addEventListener('DOMContentLoaded', () => {
     '#new-game'
   ) as HTMLButtonElement;
 
-  let game: ReturnType<typeof createGame>;
+  let game: Game;
   let view: ReturnType<typeof createView>;
   let depressedCells: HTMLElement[] = [];
   // keypresses go into the buffer. We check for when it equals the cheat word.
@@ -24,7 +24,7 @@ document.addEventListener('DOMContentLoaded', () => {
   function newGame() {
     const settingEl = document.querySelector('#setting') as HTMLSelectElement;
     const setting = settings[settingEl.value];
-    game = createGame(...setting);
+    game = new Game(...setting);
     view = createView(game, table);
     view.init();
     view.update();
@@ -52,14 +52,14 @@ document.addEventListener('DOMContentLoaded', () => {
     const target = e.target as HTMLElement;
     const innerEl = target.closest('td');
     if (!innerEl || !(e.currentTarget as Element).contains(innerEl)) return;
-    if (!game.isOver()) {
+    if (!game.isOver) {
       depressedCells = [target];
       if (e.which === 2) {
         // MMB
         const neighborIdxs = game.neighbors(tdToIdx(target));
-        neighborIdxs.forEach(idx => {
+        for (const idx of neighborIdxs) {
           depressedCells.push(document.getElementById(`cell-${idx}`)!);
-        });
+        }
       }
       for (let cell of depressedCells) {
         cell.classList.add('depressed');
@@ -118,7 +118,7 @@ document.addEventListener('DOMContentLoaded', () => {
     }
 
     if (cheating) {
-      if (game.isMine(tdToIdx(target))) {
+      if (game.isMine[tdToIdx(target)]) {
         cheatPixel.style.display = 'block';
       } else {
         cheatPixel.style.display = 'none';
