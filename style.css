@@ -29,9 +29,7 @@ h1 {
     font-weight: normal;
     position: relative;
     top: -1.5em;
-           -transition: top 500ms ease-in;
-       -moz-transition: top 500ms ease-in;
-    -webkit-transition: top 500ms ease-in;
+    transition: top 500ms ease-in;
 }
 #header.lose h1 { top:  0.0em; }
 #header.win h1  { top: -3.0em; }

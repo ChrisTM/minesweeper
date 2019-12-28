@@ -10,10 +10,7 @@ export class View {
   private cells: HTMLElement[] = [];
   private header = document.querySelector('#header')!;
 
-  constructor(private game: Game, private table: HTMLTableElement) {}
-
-  // create a new table to fit the game
-  init() {
+  constructor(private game: Game, table: HTMLTableElement) {
     const contents = document.createDocumentFragment();
     for (let r = 0; r < this.game.height; r++) {
       const row = document.createElement('tr');
@@ -26,8 +23,8 @@ export class View {
       }
       contents.appendChild(row);
     }
-    this.table.innerHTML = '';
-    this.table.appendChild(contents);
+    table.innerHTML = '';
+    table.appendChild(contents);
 
     // reset the win/lose header status
     this.header.className = '';

@@ -26,7 +26,6 @@ document.addEventListener('DOMContentLoaded', () => {
     const setting = settings[settingSelect.value];
     game = new Game(...setting);
     view = new View(game, table);
-    view.init();
     view.update();
   }
 
@@ -34,9 +33,7 @@ document.addEventListener('DOMContentLoaded', () => {
     return parseInt(cell.id.slice('cell-'.length), 10);
   }
 
-  newGameButton.addEventListener('click', e => {
-    newGame();
-  });
+  newGameButton.addEventListener('click', newGame);
 
   // right-clicking on the cell borders would trigger context menu -- an
   // annoying behavior that we disable here
@@ -148,20 +145,14 @@ document.addEventListener('DOMContentLoaded', () => {
   document.addEventListener('keydown', e => {
     cheatBuffer.push(e.which);
     cheatBuffer.shift();
-
     for (let i = 0; i < cheatBuffer.length; i++) {
       if (cheatBuffer[i] !== cheatWord[i]) {
         return; // happens when cheat code failed
       }
     }
 
-    if (cheating) {
-      cheating = false;
-      title.style.transform = 'none';
-    } else {
-      cheating = true;
-      title.style.transform = 'rotate(180deg)';
-    }
+    cheating = !cheating;
+    title.style.transform = cheating ? 'rotate(180deg)' : 'none';
   });
 
   newGame();
