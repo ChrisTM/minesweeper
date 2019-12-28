@@ -3,12 +3,12 @@
  * later releases.
  */
 
-export const createView = (game, table) => {
+export function createView(game, table) {
   const cells = []; //a quick way to look up the DOM cell given its index
   const header = document.querySelector('#header');
 
   // create a new table to fit the game
-  const init = () => {
+  function init() {
     const contents = document.createDocumentFragment();
     for (let r = 0; r < game.height; r++) {
       const row = document.createElement('tr');
@@ -26,10 +26,10 @@ export const createView = (game, table) => {
 
     // reset the win/lose header status
     header.className = '';
-  };
+  }
 
   // update all table cells to match the game state
-  const update = () => {
+  function update() {
     for (let idx = 0; idx < game.numCells; idx++) {
       updateCell(idx);
     }
@@ -38,9 +38,9 @@ export const createView = (game, table) => {
       header.className = '';
       header.classList.add(game.isWon() ? 'win' : 'lose');
     }
-  };
+  }
 
-  var updateCell = idx => {
+  function updateCell(idx: number) {
     const cell = cells[idx];
     cell.className = '';
 
@@ -64,7 +64,7 @@ export const createView = (game, table) => {
       const count = game.mineCount(idx);
       cell.innerHTML = count === 0 ? ' ' : count;
     }
-  };
+  }
 
   return { init, update };
-};
+}

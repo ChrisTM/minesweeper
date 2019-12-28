@@ -1,4 +1,4 @@
-export const createGame = (width: number, height: number, numMines: number) => {
+export function createGame(width: number, height: number, numMines: number) {
   let idx: number;
   const numCells = width * height;
   const isMine = [];
@@ -60,7 +60,7 @@ export const createGame = (width: number, height: number, numMines: number) => {
     }
   }
 
-  const clear = (idx: number) => {
+  function clear(idx: number) {
     if (isFlagged[idx] || isOver) {
       return;
     }
@@ -79,9 +79,9 @@ export const createGame = (width: number, height: number, numMines: number) => {
     if (isWin()) {
       end(undefined);
     }
-  };
+  }
 
-  const surroundClear = (idx: number) => {
+  function surroundClear(idx: number) {
     if (isRevealed[idx]) {
       // go ahead if the user has flagged the right amount of surrounding
       // mines
@@ -93,9 +93,9 @@ export const createGame = (width: number, height: number, numMines: number) => {
         neighIdxs.forEach(clear);
       }
     }
-  };
+  }
 
-  var recursiveClear = (idx: number) => {
+  function recursiveClear(idx: number) {
     if (isRevealed[idx]) {
       return;
     }
@@ -105,14 +105,14 @@ export const createGame = (width: number, height: number, numMines: number) => {
     if (!isMine[idx] && mineCount[idx] === 0) {
       neighbors(idx).map(recursiveClear);
     }
-  };
+  }
 
-  var isWin = () => {
+  function isWin() {
     const numRevealed = indices.filter(idx => isRevealed[idx]).length;
     return numRevealed + numMines === numCells;
-  };
+  }
 
-  var end = (idx: number) => {
+  function end(idx: number) {
     if (isOver) {
       return;
     }
@@ -120,17 +120,17 @@ export const createGame = (width: number, height: number, numMines: number) => {
     explodedIdx = idx;
 
     isWon = isWin();
-  };
+  }
 
-  const toggleFlag = (idx: number) => {
+  function toggleFlag(idx: number) {
     if (isOver || isRevealed[idx]) {
       return;
     }
     isFlagged[idx] = isFlagged[idx] ? false : true;
-  };
+  }
 
   // return list of cell's neighbors
-  var neighbors = (idx: number) => {
+  function neighbors(idx: number) {
     let r: number;
     let c: number;
     let newR: number;
@@ -157,7 +157,7 @@ export const createGame = (width: number, height: number, numMines: number) => {
       }
     }
     return neighbors;
-  };
+  }
 
   // we expose the things needed by the controller and the view
   return {
@@ -192,4 +192,4 @@ export const createGame = (width: number, height: number, numMines: number) => {
       return isWon;
     },
   };
-};
+}
