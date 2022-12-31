@@ -31,21 +31,26 @@
     <h1 id=win>You Win!</h1>
   </div>
 
-  <label>Game Size: <select id=setting required>
+  <label>Game size:
+    <select id=game-size required>
       <option value=small>Small</option>
       <option value=medium>Medium</option>
       <option value=large>Large</option>
-    </select> </label>
-  <button type=button id=new-game>New Game</button>
+    </select>
+  </label>
+  <button type=button id=new-game>New game</button>
 
-  <table id=board>
-  </table>
+  <table id=board></table>
 
-  <p>Goal: Uncover all mine-free cells by clicking on them. You lose the game if
-    you uncover a mine!</p>
-  <p>A numbered cell tells you how many mines are located in the eight
+  <p>
+    Goal: Uncover all mine-free cells by clicking on them. You lose the game if
+    you uncover a mine!
+  </p>
+  <p>
+    A numbered cell tells you how many mines are located in the eight
     neighboring cells. If you suspect a cell has a mine, you can right-click on
-    it to add a flag.</p>
+    it to add a flag.
+  </p>
 </body>
 
 </html>

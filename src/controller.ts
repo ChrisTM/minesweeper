@@ -1,7 +1,7 @@
 import { Game } from './model';
 import { View } from './view';
 
-const settings: { [key: string]: [number, number, number] } = {
+const gameSizes: { [key: string]: [number, number, number]; } = {
   small: [8, 8, 10],
   medium: [16, 16, 40],
   large: [32, 16, 80],
@@ -11,7 +11,7 @@ document.addEventListener('DOMContentLoaded', () => {
   const table = document.querySelector('table')!;
   const title = document.querySelector('#title') as HTMLElement;
   const cheatPixel = document.querySelector('#cheat-pixel') as HTMLElement;
-  const settingSelect = document.querySelector('#setting') as HTMLSelectElement;
+  const gameSize = document.querySelector('#game-size') as HTMLSelectElement;
   const newGameButton = document.querySelector(
     '#new-game',
   ) as HTMLButtonElement;
@@ -19,12 +19,9 @@ document.addEventListener('DOMContentLoaded', () => {
   let game: Game;
   let view: View;
   let depressedCells: HTMLElement[] = [];
-  // keypresses go into the buffer. We check for when it equals the cheat word.
-  let cheating = false;
 
   function newGame() {
-    const setting = settings[settingSelect.value];
-    game = new Game(...setting);
+    game = new Game(...gameSizes[gameSize.value]);
     view = new View(game, table);
     view.update();
   }
@@ -54,8 +51,7 @@ document.addEventListener('DOMContentLoaded', () => {
     }
     if (!game.isOver) {
       depressedCells = [target];
-      if (e.which === 2) {
-        // MMB
+      if (e.button === 1) {  // MMB
         const neighborIdxs = game.neighbors(tdToIdx(target));
         for (const idx of neighborIdxs) {
           depressedCells.push(view.cells[idx]);
@@ -77,14 +73,14 @@ document.addEventListener('DOMContentLoaded', () => {
     const idx = tdToIdx(target);
     // check if mouse is released on same field mouse was pressed
     if (target === depressedCells[0]) {
-      switch (e.which) {
-        case 1: // LMB clears a mine
+      switch (e.button) {
+        case 0: // LMB clears a mine
           game.clear(idx);
           break;
-        case 2: // MMB clears surrounding mines
+        case 1: // MMB clears surrounding mines
           game.surroundClear(idx);
           break;
-        case 3: // RMB toggles a flag
+        case 2: // RMB toggles a flag
           game.toggleFlag(idx);
           e.preventDefault();
           break;
@@ -141,18 +137,19 @@ document.addEventListener('DOMContentLoaded', () => {
     e.preventDefault();
   });
 
-  /* turn on cheating when the user types 'xyzzy' */
-  const cheatWord = [88, 89, 90, 90, 89]; // xyzzy
+  // Turn on cheating when the user types 'xyzzy'.
+  let cheating = false;
+  // keypresses go into the buffer. We check for when it equals the cheat word.
+  const cheatWord = ['x', 'y', 'z', 'z', 'y']; // xyzzy
   const cheatBuffer = new Array(cheatWord.length);
   document.addEventListener('keydown', e => {
-    cheatBuffer.push(e.which);
+    cheatBuffer.push(e.key.toLowerCase());
     cheatBuffer.shift();
     for (let i = 0; i < cheatBuffer.length; i++) {
       if (cheatBuffer[i] !== cheatWord[i]) {
         return; // happens when cheat code failed
       }
     }
-
     cheating = !cheating;
     title.style.transform = cheating ? 'rotate(180deg)' : 'none';
   });

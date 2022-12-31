@@ -59,9 +59,9 @@ export class Game {
     }
 
     // add the neighbor counts
-    const isMineFn = (idx: number) => this.isMine[idx];
     for (idx = 0; idx < this.numCells; idx++) {
-      this.mineCount[idx] = this.neighbors(idx).filter(isMineFn).length;
+      this.mineCount[idx] = this.neighbors(idx)
+        .filter(idx => this.isMine[idx]).length;
     }
   }
 
@@ -91,8 +91,7 @@ export class Game {
       // go ahead if the user has flagged the right amount of surrounding
       // mines
       const neighIdxs = this.neighbors(idx);
-      const flagCount = neighIdxs.filter((idx: number) => this.isFlagged[idx])
-        .length;
+      const flagCount = neighIdxs.filter(idx => this.isFlagged[idx]).length;
 
       if (flagCount === this.mineCount[idx]) {
         for (const idx of neighIdxs) {
@@ -135,7 +134,7 @@ export class Game {
     if (this.isOver || this.isRevealed[idx]) {
       return;
     }
-    this.isFlagged[idx] = this.isFlagged[idx] ? false : true;
+    this.isFlagged[idx] = !this.isFlagged[idx];
   }
 
   // return list of cell's neighbors
